@@ -1,0 +1,22 @@
+version: '3.1'
+services:
+  ozono-db:
+    image: postgres
+    container_name: ozono-db
+    environment:
+      - POSTGRES_USER=ozono
+      - POSTGRES_PASSWORD=ozono
+      - POSTGRES_DB=ozono
+    ports:
+      - '5432:5432'
+
+  ozono_pgadmin:
+    container_name: ozono_pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=ozono@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=ozono
+    ports:
+      - 5001:80
+    depends_on:
+      - ozono-db
