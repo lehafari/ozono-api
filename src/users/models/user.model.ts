@@ -13,10 +13,14 @@ import {
   Unique,
   OneToMany,
 } from 'typeorm';
+import { Roles } from '../enum/roles.enum';
 
 @Entity()
 @Unique(['email', 'username'])
 export class User {
+  if(arg0: boolean) {
+    throw new Error('Method not implemented.');
+  }
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -62,6 +66,6 @@ export class User {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
-  // @Column({ enum: Roles, default: Roles.USER })
-  // role: Roles;
+  @Column({ enum: Roles, default: Roles.USER })
+  role: Roles;
 }

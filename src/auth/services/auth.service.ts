@@ -1,7 +1,6 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { compareSync, hashSync } from 'bcryptjs';
 import config from 'src/config/config';
 import { CreateUserDto } from 'src/users/dtos';
 import { UsersService } from 'src/users/services/users.service';
@@ -22,7 +21,7 @@ export class AuthService {
   async signup(createUserDto: CreateUserDto): Promise<Tokens> {
     try {
       const user = await this.usersService.createUser(createUserDto);
-      const tokens = await this.getTokens(user.id, user.email);
+      const tokens = await this.getTokens(user);
       await this.updateHashRefreshToken(tokens.refresh_token, user.id);
       return tokens;
     } catch (error) {
@@ -35,13 +34,13 @@ export class AuthService {
       signinDto.userOrEmail,
     );
     if (!user) {
-      throw new Error('El usuario no existe');
+      throw new ForbiddenException('El usuario no existe');
     }
-    console.log(user);
-
-    //compare hash password with argon2
-    const isValid = argon2.verify(user.password, signinDto.password);
-    const tokens = await this.getTokens(user.id, user.email);
+    const isValid = await argon2.verify(user.password, signinDto.password);
+    if (!isValid) {
+      throw new ForbiddenException('El password no es valido');
+    }
+    const tokens = await this.getTokens(user);
     await this.updateHashRefreshToken(tokens.refresh_token, user.id);
     return tokens;
   }
@@ -50,10 +49,14 @@ export class AuthService {
     return 'logout';
   }
 
-  async getTokens(userId: string, email: string): Promise<Tokens> {
+  //***** HELPERS******//
+
+  //***** Metodo para Generar Tokens *****//
+  async getTokens(user): Promise<Tokens> {
     const jwtPayload: JwtPayload = {
-      sub: userId,
-      email: email,
+      sub: user.id,
+      email: user.email,
+      role: user.role,
     };
 
     const [at, rt] = await Promise.all([
@@ -62,22 +65,22 @@ export class AuthService {
         expiresIn: '15m',
       }),
       this.jwtService.signAsync(jwtPayload, {
-        secret: this.configService.jwt.secret,
+        secret: this.configService.jwt.refreshSecret,
         expiresIn: '7d',
       }),
     ]);
-
     return {
       access_token: at,
       refresh_token: rt,
     };
   }
 
+  //***** Metodo para guardar refresh token en la base de datos *****//
   async updateHashRefreshToken(
     refreshToken: string,
     userId: string,
   ): Promise<void> {
-    const hash = hashSync(refreshToken, 10);
+    const hash = await argon2.hash(refreshToken);
     await this.usersService.updateHashRefreshToken(userId, hash);
   }
 }
