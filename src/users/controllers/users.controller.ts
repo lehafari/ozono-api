@@ -44,11 +44,10 @@ export class UsersController {
   }
   //***** Get actual user2 *****//
 
-  @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get actual user' })
   @Get('me2')
-  getActualUser2(@GetCurrentUser('refreshToken') user: JwtPayload) {
+  getActualUser2(@GetCurrentUser('refreshToken') user) {
     return user;
   }
 
