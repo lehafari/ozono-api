@@ -51,12 +51,24 @@ export class AuthService {
 
   //***** HELPERS******//
 
+  //***** Metodo para refrescar el token *****//
+  async refreshTokens(id: string, rt: string): Promise<Tokens> {
+    const user = await this.usersService.findById(id);
+    if (!user || !user.refreshToken)
+      throw new ForbiddenException('Access Denied');
+    const rtMatches = await argon2.verify(user.refreshToken, rt);
+    if (!rtMatches) throw new ForbiddenException('Access Denied');
+    const tokens = await this.getTokens(user);
+    await this.updateHashRefreshToken(user.id, tokens.refresh_token);
+    return tokens;
+  }
+
   //***** Metodo para Generar Tokens *****//
-  async getTokens(user): Promise<Tokens> {
+  async getTokens({ id, email, role }): Promise<Tokens> {
     const jwtPayload: JwtPayload = {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
+      sub: id,
+      email: email,
+      role: role,
     };
 
     const [at, rt] = await Promise.all([

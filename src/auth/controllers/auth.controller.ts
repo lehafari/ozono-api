@@ -1,9 +1,19 @@
-import { Body, Controller, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { GetUser } from 'src/users/decorators';
+import { GetCurrentUser } from 'src/users/decorators/getCurrentUser.decorator';
 import { CreateUserDto } from 'src/users/dtos/createUser.dto';
+import { User } from 'src/users/models/user.model';
 import { SigninDto } from '../dtos';
 import { AuthService } from '../services/auth.service';
-import { Tokens } from '../types';
+import { JwtPayload, Tokens } from '../types';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -28,5 +38,18 @@ export class AuthController {
   @Post('logout')
   logout(): string {
     return this.authService.logout();
+  }
+
+  //***** Refrescar el token *****//
+  // @UseGuards(RtGuard)
+  @ApiOperation({ summary: 'Refresh the token' })
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  refreshTokens(
+    @GetUser() user: JwtPayload,
+    @GetCurrentUser('refreshToken') refreshToken: string,
+  ): Promise<Tokens> {
+    console.log(refreshToken);
+    return this.authService.refreshTokens(user.sub, refreshToken);
   }
 }
