@@ -5,13 +5,15 @@ import {
   HttpStatus,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/users/decorators';
 import { GetCurrentUser } from 'src/users/decorators/getCurrentUser.decorator';
 import { CreateUserDto } from 'src/users/dtos/createUser.dto';
 import { User } from 'src/users/models/user.model';
 import { SigninDto } from '../dtos';
+import { JwtGuard, RtGuard } from '../guards';
 import { AuthService } from '../services/auth.service';
 import { JwtPayload, Tokens } from '../types';
 
@@ -35,13 +37,18 @@ export class AuthController {
   }
 
   //***** Logout un usuario *****//
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'User Logout' })
   @Post('logout')
-  logout(): string {
-    return this.authService.logout();
+  logout(@GetUser('sub') id: string): Promise<number> {
+    return this.authService.logout(id);
   }
 
   //***** Refrescar el token *****//
-  // @UseGuards(RtGuard)
+
+  @UseGuards(RtGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Refresh the token' })
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
@@ -49,7 +56,6 @@ export class AuthController {
     @GetUser() user: JwtPayload,
     @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<Tokens> {
-    console.log(refreshToken);
     return this.authService.refreshTokens(user.sub, refreshToken);
   }
 }

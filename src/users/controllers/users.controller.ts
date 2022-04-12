@@ -20,7 +20,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/upload';
 import { Body } from '@nestjs/common';
-import { JwtGuard } from 'src/auth/guards';
+import { JwtGuard, RtGuard } from 'src/auth/guards';
 import { JwtPayload } from 'src/auth/types';
 import { UsersService } from '../services/users.service';
 import { UpdateUserDto } from '../dtos';
@@ -40,14 +40,6 @@ export class UsersController {
   @ApiOperation({ summary: 'Get actual user' })
   @Get('me')
   getActualUser(@GetUser() user: JwtPayload) {
-    return user;
-  }
-  //***** Get actual user2 *****//
-
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get actual user' })
-  @Get('me2')
-  getActualUser2(@GetCurrentUser('refreshToken') user) {
     return user;
   }
 

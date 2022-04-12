@@ -1,4 +1,10 @@
-import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import config from 'src/config/config';
@@ -45,23 +51,12 @@ export class AuthService {
     return tokens;
   }
 
-  logout(): string {
-    return 'logout';
+  async logout(userId: string): Promise<number> {
+    await this.usersService.updateHashRefreshToken(userId, null);
+    return HttpStatus.OK;
   }
 
   //***** HELPERS******//
-
-  //***** Metodo para refrescar el token *****//
-  async refreshTokens(id: string, rt: string): Promise<Tokens> {
-    const user = await this.usersService.findById(id);
-    if (!user || !user.refreshToken)
-      throw new ForbiddenException('Access Denied');
-    const rtMatches = await argon2.verify(user.refreshToken, rt);
-    if (!rtMatches) throw new ForbiddenException('Access Denied');
-    const tokens = await this.getTokens(user);
-    await this.updateHashRefreshToken(user.id, tokens.refresh_token);
-    return tokens;
-  }
 
   //***** Metodo para Generar Tokens *****//
   async getTokens({ id, email, role }): Promise<Tokens> {
@@ -85,6 +80,18 @@ export class AuthService {
       access_token: at,
       refresh_token: rt,
     };
+  }
+
+  //***** Metodo para refrescar el token *****//
+  async refreshTokens(id: string, rt: string): Promise<Tokens> {
+    const user = await this.usersService.findById(id);
+    if (!user || !user.refreshToken)
+      throw new ForbiddenException('Access Denied');
+    const rtMatches = await argon2.verify(user.refreshToken, rt);
+    if (!rtMatches) throw new ForbiddenException('Access Denied');
+    const tokens = await this.getTokens(user);
+    await this.updateHashRefreshToken(tokens.refresh_token, user.id);
+    return tokens;
   }
 
   //***** Metodo para guardar refresh token en la base de datos *****//

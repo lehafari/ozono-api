@@ -1,18 +1,7 @@
-import { CanActivate, ExecutionContext, mixin, Type } from '@nestjs/common';
-import { Roles } from 'src/users/enum/roles.enum';
-import { JwtGuard } from './jwt.guard';
+import { AuthGuard } from '@nestjs/passport';
 
-export const RtGuard = (...roles: Roles[]): Type<CanActivate> => {
-  class RoleGuardMixin extends JwtGuard {
-    async canActivate(context: ExecutionContext) {
-      await super.canActivate(context);
-
-      const request = context.switchToHttp().getRequest<any>();
-      const user = request.user;
-
-      return roles.includes(user.role);
-    }
+export class RtGuard extends AuthGuard('jwt-refresh') {
+  constructor() {
+    super();
   }
-
-  return mixin(RoleGuardMixin);
-};
+}
