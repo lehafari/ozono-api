@@ -41,7 +41,7 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   country: string;
 
   // password min 8 max 16
