@@ -32,7 +32,7 @@ export class UsersService {
       if (error.code === '23505') {
         throw new ForbiddenException('El usuario o el email ya existen');
       }
-      throw error();
+      throw new BadRequestException(error.message);
     }
   }
 
