@@ -44,10 +44,10 @@ export class User {
   // @Column()
   // brithDate: Date;
 
-  @Column()
+  @Column({ nullable: true })
   gender: string;
 
-  @Column()
+  @Column({ nullable: true })
   country: string;
 
   @Column({ nullable: true })
