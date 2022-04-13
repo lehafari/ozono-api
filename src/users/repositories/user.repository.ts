@@ -1,7 +1,8 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Like, Repository } from 'typeorm';
 import { ForbiddenException, HttpStatus } from '@nestjs/common';
 import { User } from '../models/user.model';
 import { UpdateUserDto } from '../dtos';
+import argon2 from 'argon2';
 
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {
@@ -32,8 +33,7 @@ export class UsersRepository extends Repository<User> {
       .set({ image: profileImage.filename })
       .where('id = :id', { id: profileImage.user })
       .execute();
-
-    if (!response.affected) {
+    if (!response) {
       throw new ForbiddenException('El usuario no existe');
     }
     if (response) {
@@ -41,5 +41,77 @@ export class UsersRepository extends Repository<User> {
     } else {
       throw new ForbiddenException('No se pudo actualizar la imagen');
     }
+  }
+
+  //***** Delete User *****//
+  async deleteUser(id: string, confirmPassword: string) {
+    const user = await this.findOne({ id });
+    if (!user) {
+      return false;
+    }
+
+    const verify = this.verifyPassword(confirmPassword, user.password);
+    if (!verify) {
+      throw new ForbiddenException('La contraseña no es correcta');
+    }
+    const deleteUser = await this.createQueryBuilder()
+      .delete()
+      .from(User)
+      .where('id = :id', { id })
+      .execute();
+    if (!deleteUser) {
+      throw new ForbiddenException('El usuario no existe');
+    }
+    return HttpStatus.OK;
+  }
+
+  //***** Verify Password *****//
+  verifyPassword(password: string, hash: string) {
+    return argon2.verify(hash, password);
+  }
+
+  //! ***** Funciones exclusivas de administrados ******//
+
+  //***** Delete user by admin *****//
+  async deleteUserByAdmin(id: string) {
+    const deleteUser = await this.createQueryBuilder()
+      .delete()
+      .from(User)
+      .where('id = :id', { id })
+      .execute();
+    if (!deleteUser) {
+      throw new ForbiddenException('El usuario no existe');
+    }
+    return HttpStatus.OK;
+  }
+
+  //***** Find users *****//
+  async findUsers(value: string): Promise<User[]> {
+    console.log(value);
+    const users = await this.createQueryBuilder()
+      .where({
+        username: Like(`%${value}%`),
+      })
+      .orWhere({
+        email: Like(`%${value}%`),
+      })
+      .orWhere({
+        firstName: Like(`%${value}%`),
+      })
+      .orWhere({
+        lastName: Like(`%${value}%`),
+      })
+      .orderBy('username', 'DESC')
+      .getMany();
+
+    if (users.length === 0) {
+      throw new ForbiddenException('No hay usuarios');
+    }
+    console.log(users);
+    users.map((user) => {
+      delete user.password;
+      delete user.refreshToken;
+    });
+    return users;
   }
 }

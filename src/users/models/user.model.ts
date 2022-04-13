@@ -12,8 +12,10 @@ import {
   UpdateDateColumn,
   Unique,
   OneToMany,
+  ManyToMany,
 } from 'typeorm';
 import { Roles } from '../enum/roles.enum';
+import { Course } from 'src/courses/models/course.model';
 
 @Entity()
 @Unique(['email', 'username'])
@@ -68,4 +70,7 @@ export class User {
 
   @Column({ enum: Roles, default: Roles.USER })
   role: Roles;
+
+  @ManyToMany((type) => Course, (course) => course.users)
+  courses: Course[];
 }

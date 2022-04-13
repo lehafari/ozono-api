@@ -1,7 +1,9 @@
+import fs from 'fs';
 import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { hash } from 'argon2';
 import { Tokens } from 'src/auth/types';
@@ -43,13 +45,7 @@ export class UsersService {
     return updateUser;
   }
 
-  async findByUserOrEmail(userOrEmail: string): Promise<User> {
-    const user = await this.usersRepository.findByUserOrEmail(userOrEmail);
-    if (!user) {
-      throw new ForbiddenException('El usuario no existe');
-    }
-    return user;
-  }
+  //***** Update Hash Refresh Token *****//
   async updateHashRefreshToken(
     userId: string,
     refreshToken: string,
@@ -70,6 +66,16 @@ export class UsersService {
     return response;
   }
 
+  //***** Get Profile Image *****//
+  getProfileImage(image: string, res): any {
+    if (!fs.existsSync(`./files/${image}`)) {
+      throw new NotFoundException('No existe la imagen');
+    }
+    const img = res.sendFile(image, { root: './files' });
+    console.log(img);
+    return img;
+  }
+
   //***** Find user by id *****//
   async findById(id: string): Promise<User> {
     const user = await this.usersRepository.findOne(id);
@@ -77,5 +83,63 @@ export class UsersService {
       throw new ForbiddenException('El usuario no existe');
     }
     return user;
+  }
+
+  //***** Find  user by id or email ******//
+  async findByUserOrEmail(userOrEmail: string): Promise<User> {
+    const user = await this.usersRepository.findByUserOrEmail(userOrEmail);
+    if (!user) {
+      throw new ForbiddenException('El usuario no existe');
+    }
+    return user;
+  }
+
+  //***** Delete User *****//
+  async deleteUser(id: string, confirmPassword: string) {
+    const deleteUser = await this.usersRepository.deleteUser(
+      id,
+      confirmPassword,
+    );
+    if (!deleteUser) {
+      throw new ForbiddenException('El usuario no existe');
+    }
+    return deleteUser;
+  }
+
+  //! ***** Funciones exclusivas de administrados ******//
+
+  //***** Get all users *****//
+  async getAllUsers(): Promise<User[]> {
+    const users = await this.usersRepository.find();
+    if (!users) {
+      throw new ForbiddenException('No hay usuarios');
+    }
+    users.map((user) => {
+      delete user.password;
+      delete user.refreshToken;
+    });
+    return users;
+  }
+
+  //***** Delete user *****//
+  async deleteUserByAdmin(id: string) {
+    const deleteUser = await this.usersRepository.deleteUserByAdmin(id);
+    if (!deleteUser) {
+      throw new ForbiddenException('El usuario no existe');
+    }
+    return deleteUser;
+  }
+
+  //***** Find users *****//
+  async findUsers(value: string): Promise<User[]> {
+    const users = await this.usersRepository.findUsers(value);
+    if (!users) {
+      throw new ForbiddenException('No hay usuarios');
+    }
+    users.map((user) => {
+      delete user.password;
+      delete user.refreshToken;
+    });
+    return users;
   }
 }

@@ -40,13 +40,12 @@ export class AuthController {
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'User Logout' })
-  @Post('logout')
+  @Put('logout')
   logout(@GetUser('sub') id: string): Promise<number> {
     return this.authService.logout(id);
   }
 
   //***** Refrescar el token *****//
-
   @UseGuards(RtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Refresh the token' })
