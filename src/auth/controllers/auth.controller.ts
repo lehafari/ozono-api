@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -49,7 +50,7 @@ export class AuthController {
   @UseGuards(RtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Refresh the token' })
-  @Post('refresh')
+  @Get('refresh')
   @HttpCode(HttpStatus.OK)
   refreshTokens(
     @GetUser() user: JwtPayload,
