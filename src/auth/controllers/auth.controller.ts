@@ -33,6 +33,7 @@ export class AuthController {
   //***** Logear un usuario *****//
   @ApiOperation({ summary: 'User Login' })
   @Post('signin')
+  @HttpCode(HttpStatus.OK)
   signin(@Body() signinDto: SigninDto): Promise<Tokens> {
     return this.authService.signin(signinDto);
   }
