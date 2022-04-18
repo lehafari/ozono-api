@@ -26,6 +26,7 @@ export class AuthController {
   //***** Crear un usuario *****//
   @ApiOperation({ summary: 'Create a new user' })
   @Put('signup')
+  @HttpCode(HttpStatus.CREATED)
   signup(@Body() createUserDto: CreateUserDto): Promise<Tokens> {
     return this.authService.signup(createUserDto);
   }
