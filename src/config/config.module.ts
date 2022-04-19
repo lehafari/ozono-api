@@ -7,7 +7,10 @@ import { ConfigModule as NestConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     NestConfigModule.forRoot({
-      envFilePath: join(__dirname, '../../.env'),
+      //envFilePath with production and development env files in the root of the project
+      envFilePath:
+        join(__dirname, `../.env.${process.env.NODE_ENV}`) ||
+        join(__dirname, '../.env'),
       load: [config],
       isGlobal: true,
       validationSchema: validationSchema,
