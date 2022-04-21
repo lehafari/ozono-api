@@ -1,0 +1,5 @@
+export enum Level {
+  PRINCIPIANTE = 'PRINCIPIANTE',
+  INTERMEDIO = 'INTERMEDIO',
+  AVANZADO = 'AVANZADO',
+}

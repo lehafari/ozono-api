@@ -1,11 +1,15 @@
 import { User } from 'src/users/models/user.model';
 import {
   Column,
+  CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   Unique,
+  UpdateDateColumn,
 } from 'typeorm';
+import { Level, Status } from '../enum';
 
 @Entity()
 @Unique(['title'])
@@ -28,11 +32,11 @@ export class Course {
   @Column()
   category: string;
 
-  @Column()
-  level: string;
+  @Column({ enum: Level, default: Level.PRINCIPIANTE })
+  level: Level;
 
-  @Column()
-  status: boolean;
+  @Column({ enum: Status, default: Status.ACTIVE })
+  status: Status;
 
   @Column()
   premium: boolean;
@@ -43,12 +47,17 @@ export class Course {
   @Column()
   own: boolean;
 
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
   @ManyToMany((type) => User, (user) => user.courses)
+  @JoinTable()
   users: User[];
+
+  @ManyToMany((type) => User, (user) => user.courses)
+  @JoinTable()
+  teachers: User[];
 }

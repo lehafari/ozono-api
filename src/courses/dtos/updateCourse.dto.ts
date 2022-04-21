@@ -2,60 +2,60 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsEnum,
-  IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 import { Level, Status } from '../enum';
 
-export class CreateCourseDto {
+export class UpdateCourseDto {
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   title: string;
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @ApiProperty()
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   price: number;
 
   @ApiProperty()
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   duration: number;
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   category: string;
 
   @ApiProperty()
   @IsEnum(Level)
-  @IsNotEmpty()
+  @IsOptional()
   level: Level;
 
   @ApiProperty()
   @IsEnum(Status)
-  @IsNotEmpty()
+  @IsOptional()
   status: Status;
 
   @ApiProperty()
   @IsBoolean()
-  @IsNotEmpty()
+  @IsOptional()
   premium: boolean;
 
   @ApiProperty()
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   premiumPrice: number;
 
   @ApiProperty()
   @IsBoolean()
-  @IsNotEmpty()
+  @IsOptional()
   own: boolean;
 }

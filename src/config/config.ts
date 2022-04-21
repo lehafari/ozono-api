@@ -8,7 +8,7 @@ export default registerAs('config', () => ({
     password: process.env.DB_PASSWORD || 'ozono',
     name: process.env.DB_NAME || 'ozono',
     ssl: {
-      rejectUnauthorized: false,
+      rejectUnauthorized: process.env.DB_SSL ? true : false,
     },
   },
   jwt: {

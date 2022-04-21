@@ -151,7 +151,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Update users' })
   @Put('updateUser/:id')
   async updateUsers(
-    @Param() id: string,
+    @Param('id') id: string,
     @Body() updateUser: UpdateUserDto,
   ): Promise<number> {
     try {
@@ -168,7 +168,7 @@ export class UsersController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete users' })
   @Delete('deleteUser/:id')
-  async deleteUsers(@Param() id: string): Promise<number> {
+  async deleteUsers(@Param('id') id: string): Promise<number> {
     try {
       return await this.usersService.deleteUserByAdmin(id);
     } catch (error) {
@@ -182,7 +182,7 @@ export class UsersController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Find users' })
   @Get('find/:id')
-  async findUsers(@Param() id): Promise<User[]> {
-    return this.usersService.findUsers(id.id);
+  async findUsers(@Param('id') id: string): Promise<User[]> {
+    return this.usersService.findUsers(id);
   }
 }

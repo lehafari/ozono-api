@@ -19,7 +19,7 @@ import config from 'src/config/config';
           database: database.name,
           entities: [join(__dirname, '../**/models/**.model{.ts,.js}')],
           synchronize: true,
-          ssl: database.ssl,
+          ssl: database.ssl.rejectUnauthorized ? database.ssl : null,
         };
       },
     }),
