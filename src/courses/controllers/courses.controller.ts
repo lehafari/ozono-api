@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -10,6 +12,9 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
+import { JwtPayload } from 'src/auth/types';
+import { GetUser } from 'src/users/decorators';
+import { confirmPasswordDto } from 'src/users/dtos/confirmPassword.dto';
 import { Roles } from 'src/users/enum/roles.enum';
 import { User } from 'src/users/models/user.model';
 import { AddTeacherDto, AddUserDto, CreateCourseDto } from '../dtos';
@@ -31,7 +36,8 @@ export class CoursesController {
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create course' })
-  @Post('create')
+  @HttpCode(HttpStatus.CREATED)
+  @Put('create')
   async createCourse(@Body() createCourseDto: CreateCourseDto) {
     return this.coursesService.createCourse(createCourseDto);
   }
@@ -75,6 +81,24 @@ export class CoursesController {
     @Body() createCourseDto: CreateCourseDto,
   ): Promise<CoursesResponse> {
     return this.coursesService.updateCourse(id, createCourseDto);
+  }
+
+  //***** Delete course *****//
+  //! Only admin
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete course' })
+  @Delete('delete/:id')
+  async deleteCourse(
+    @Param('id') id: string,
+    @GetUser() user: JwtPayload,
+    @Body() confirmPassword: confirmPasswordDto,
+  ): Promise<CoursesResponse> {
+    return this.coursesService.deleteCourse(
+      user.sub,
+      id,
+      confirmPassword.password,
+    );
   }
 
   //!   *******************************************

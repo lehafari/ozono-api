@@ -1,4 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { verify } from 'argon2';
 import { Roles } from 'src/users/enum/roles.enum';
 import { User } from 'src/users/models/user.model';
 import { UsersRepository } from 'src/users/repositories/user.repository';
@@ -67,6 +68,16 @@ export class CoursesService {
     }
     return courses;
   }
+
+  //***** Get number of users per course *****//
+  async getNumberOfUsersByCourseId(id: string): Promise<number> {
+    const students = await this.getUsersByCourseId(id);
+    if (students.length === 0) {
+      throw new ForbiddenException('No hay estudiantes');
+    }
+    return students.length;
+  }
+
   //***** Update course *****//
   //! Only Admin and Teacher
   async updateCourse(
@@ -81,6 +92,26 @@ export class CoursesService {
       throw new ForbiddenException('El curso no existe');
     }
     return updatedCourse;
+  }
+
+  //***** Delete course *****//
+  //! Only Admin
+  async deleteCourse(
+    id: string,
+    courseId: string,
+    confirmPassword: string,
+  ): Promise<CoursesResponse> {
+    const user = await this.userRepository.findOne(id);
+    if (!user) {
+      throw new ForbiddenException(
+        'Ocurrio un error al eliminar el curso, intente de nuevo',
+      );
+    }
+    const pwMatch = await verify(user.password, confirmPassword);
+    if (!pwMatch) {
+      throw new ForbiddenException('Contraseña incorrecta, intente de nuevo');
+    }
+    return await this.courseRepository.deleteCourse(courseId);
   }
 
   //!   *******************************************

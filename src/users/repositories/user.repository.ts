@@ -49,8 +49,7 @@ export class UsersRepository extends Repository<User> {
     if (!user) {
       return false;
     }
-
-    const verify = this.verifyPassword(confirmPassword, user.password);
+    const verify = await argon2.verify(user.password, confirmPassword);
     if (!verify) {
       throw new ForbiddenException('La contraseña no es correcta');
     }

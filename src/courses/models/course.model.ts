@@ -47,6 +47,9 @@ export class Course {
   @Column()
   own: boolean;
 
+  @Column({ default: 0 })
+  numberOfStudents: number;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 

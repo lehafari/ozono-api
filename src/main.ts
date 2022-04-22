@@ -4,6 +4,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import compression from 'compression';
 import helmet from 'helmet';
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
+import { AllExceptionFilter } from './common/filters/httpExeption.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +16,12 @@ async function bootstrap() {
 
   //***** Helmet *****//
   app.use(helmet());
+
+  //***** Global filter *****//
+  app.useGlobalFilters(new AllExceptionFilter());
+
+  //***** Global interceptor *****//
+  app.useGlobalInterceptors(new TimeoutInterceptor());
 
   //*****Swagger config *****//
   const swagger = new DocumentBuilder()

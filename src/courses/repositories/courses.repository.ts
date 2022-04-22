@@ -41,6 +41,27 @@ export class CoursesRepository extends Repository<Course> {
     return response;
   }
 
+  //***** Delete course *****//
+  async deleteCourse(id: string): Promise<CoursesResponse> {
+    const course = await this.findOne(id);
+    if (!course) {
+      throw new ForbiddenException('El curso no existe');
+    }
+    const deleteCourse = await this.createQueryBuilder()
+      .delete()
+      .from(Course)
+      .where('id = :id', { id })
+      .execute();
+    if (!deleteCourse) {
+      throw new ForbiddenException('El curso no existe');
+    }
+    const response = {
+      statusCode: HttpStatus.OK,
+      message: 'Curso eliminado con exito',
+    };
+    return response;
+  }
+
   //!   *******************************************
   //!  MANAGE TEACHERS IN COURSES
   //!   *******************************************
@@ -139,6 +160,10 @@ export class CoursesRepository extends Repository<Course> {
         .relation(Course, 'users')
         .of(addUserDto.courseId)
         .remove(addUserDto.userId);
+      const course = await this.findOne(addUserDto.courseId);
+      const user = await this.getUsersByCourseId(addUserDto.courseId);
+      course.numberOfStudents = user.length;
+      await this.update(course.id, course);
     } catch (error) {
       if (error.code === '23505') {
         throw new ForbiddenException(
@@ -161,6 +186,10 @@ export class CoursesRepository extends Repository<Course> {
         .relation(Course, 'users')
         .of(addUserDto.courseId)
         .add(addUserDto.userId);
+      const course = await this.findOne(addUserDto.courseId);
+      const user = await this.getUsersByCourseId(addUserDto.courseId);
+      course.numberOfStudents = user.length;
+      await this.update(course.id, course);
     } catch (error) {
       if (error.code === '23505') {
         throw new ForbiddenException(
