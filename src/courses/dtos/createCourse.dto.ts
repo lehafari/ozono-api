@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-} from 'class-validator';
-import { Level, Status } from '../enum';
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Boolean, Level, Status } from '../enum';
 
 export class CreateCourseDto {
   @ApiProperty()
@@ -45,9 +39,9 @@ export class CreateCourseDto {
   status: Status;
 
   @ApiProperty()
-  @IsBoolean()
+  @IsEnum(Boolean)
   @IsNotEmpty()
-  premium: boolean;
+  premium: Boolean;
 
   @ApiProperty()
   @IsNumber()
@@ -55,7 +49,7 @@ export class CreateCourseDto {
   premiumPrice: number;
 
   @ApiProperty()
-  @IsBoolean()
+  @IsEnum(Boolean)
   @IsNotEmpty()
-  own: boolean;
+  own: Boolean;
 }

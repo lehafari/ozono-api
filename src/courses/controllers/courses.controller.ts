@@ -19,7 +19,6 @@ import { Roles } from 'src/users/enum/roles.enum';
 import { User } from 'src/users/models/user.model';
 import { AddTeacherDto, AddUserDto, CreateCourseDto } from '../dtos';
 import { Status } from '../enum';
-import { Course } from '../models/course.model';
 import { CoursesService } from '../services/courses.service';
 import { CoursesResponse } from '../types';
 

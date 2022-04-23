@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Level, Status } from '../enum';
+import { Boolean, Level, Status } from '../enum';
 
 export class UpdateCourseDto {
   @ApiProperty()
@@ -45,9 +45,9 @@ export class UpdateCourseDto {
   status: Status;
 
   @ApiProperty()
-  @IsBoolean()
+  @IsEnum(Boolean)
   @IsOptional()
-  premium: boolean;
+  premium: Boolean;
 
   @ApiProperty()
   @IsNumber()
@@ -55,7 +55,7 @@ export class UpdateCourseDto {
   premiumPrice: number;
 
   @ApiProperty()
-  @IsBoolean()
+  @IsEnum(Boolean)
   @IsOptional()
-  own: boolean;
+  own: Boolean;
 }

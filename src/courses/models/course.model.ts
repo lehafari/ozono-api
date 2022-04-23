@@ -9,7 +9,7 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { Level, Status } from '../enum';
+import { Boolean, Level, Status } from '../enum';
 
 @Entity()
 @Unique(['title'])
@@ -38,14 +38,14 @@ export class Course {
   @Column({ enum: Status, default: Status.ACTIVE })
   status: Status;
 
-  @Column()
-  premium: boolean;
+  @Column({ enum: Boolean, default: Boolean.false })
+  premium: Boolean;
 
   @Column({ nullable: true })
   premiumPrice: number;
 
-  @Column()
-  own: boolean;
+  @Column({ enum: Boolean, default: Boolean.true })
+  own: Boolean;
 
   @Column({ default: 0 })
   numberOfStudents: number;
