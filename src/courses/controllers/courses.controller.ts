@@ -10,7 +10,12 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { JwtPayload } from 'src/auth/types';
 import { GetUser } from 'src/users/decorators';
@@ -20,7 +25,7 @@ import { User } from 'src/users/models/user.model';
 import { AddTeacherDto, AddUserDto, CreateCourseDto } from '../dtos';
 import { Status } from '../enum';
 import { CoursesService } from '../services/courses.service';
-import { CoursesResponse } from '../types';
+import { Response } from '../types';
 
 @ApiTags('courses')
 @Controller('courses')
@@ -78,7 +83,7 @@ export class CoursesController {
   async updateCourse(
     @Param('id') id: string,
     @Body() createCourseDto: CreateCourseDto,
-  ): Promise<CoursesResponse> {
+  ): Promise<Response> {
     return this.coursesService.updateCourse(id, createCourseDto);
   }
 
@@ -92,12 +97,21 @@ export class CoursesController {
     @Param('id') id: string,
     @GetUser() user: JwtPayload,
     @Body() confirmPassword: confirmPasswordDto,
-  ): Promise<CoursesResponse> {
+  ): Promise<Response> {
     return this.coursesService.deleteCourse(
       user.sub,
       id,
       confirmPassword.password,
     );
+  }
+
+  //***** Featured courses *****//
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Featured courses ' })
+  @Put('featured/:id')
+  async setFeatured(@Param('id') id: string): Promise<Response> {
+    return this.coursesService.setFeatured(id);
   }
 
   //!   *******************************************
@@ -124,7 +138,7 @@ export class CoursesController {
   @Put('teacher/add')
   async addTeacherToCourse(
     @Body() addTeacherDto: AddTeacherDto,
-  ): Promise<CoursesResponse> {
+  ): Promise<Response> {
     return this.coursesService.addTeacherToCourse(addTeacherDto);
   }
 
@@ -136,7 +150,7 @@ export class CoursesController {
   @Delete('teacher/remove')
   async removeTeacherFromCourse(
     @Body() addTeacherDto: AddTeacherDto,
-  ): Promise<CoursesResponse> {
+  ): Promise<Response> {
     return this.coursesService.removeTeacherFromCourse(addTeacherDto);
   }
 
@@ -159,9 +173,7 @@ export class CoursesController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Add user to a course', description: 'Only admin' })
   @Put('user/add')
-  async addUserToCourse(
-    @Body() addUserDto: AddUserDto,
-  ): Promise<CoursesResponse> {
+  async addUserToCourse(@Body() addUserDto: AddUserDto): Promise<Response> {
     return this.coursesService.addUserToCourse(addUserDto);
   }
 
@@ -176,7 +188,10 @@ export class CoursesController {
   @Delete('user/remove')
   async removeUserFromCourse(
     @Body() addUserDto: AddUserDto,
-  ): Promise<CoursesResponse> {
+  ): Promise<Response> {
     return this.coursesService.removeUserFromCourse(addUserDto);
   }
+}
+function id(id: any) {
+  throw new Error('Function not implemented.');
 }

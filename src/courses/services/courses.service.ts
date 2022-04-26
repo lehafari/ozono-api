@@ -12,7 +12,7 @@ import {
 import { Status } from '../enum';
 import { Course } from '../models/course.model';
 import { CoursesRepository } from '../repositories/courses.repository';
-import { CoursesResponse } from '../types';
+import { Response } from '../types';
 
 @Injectable()
 export class CoursesService {
@@ -83,7 +83,7 @@ export class CoursesService {
   async updateCourse(
     courseId: string,
     course: UpdateCourseDto,
-  ): Promise<CoursesResponse> {
+  ): Promise<Response> {
     const updatedCourse = await this.courseRepository.updateCourse(
       courseId,
       course,
@@ -100,7 +100,7 @@ export class CoursesService {
     id: string,
     courseId: string,
     confirmPassword: string,
-  ): Promise<CoursesResponse> {
+  ): Promise<Response> {
     const user = await this.userRepository.findOne(id);
     if (!user) {
       throw new ForbiddenException(
@@ -112,6 +112,16 @@ export class CoursesService {
       throw new ForbiddenException('Contraseña incorrecta, intente de nuevo');
     }
     return await this.courseRepository.deleteCourse(courseId);
+  }
+
+  //***** Feature a course ******//
+  //! Only Admin
+  async setFeatured(courseId: string): Promise<Response> {
+    const course = await this.courseRepository.findOne(courseId);
+    if (!course) {
+      throw new ForbiddenException('El curso no existe');
+    }
+    return this.courseRepository.setFeatured(courseId);
   }
 
   //!   *******************************************
@@ -137,9 +147,7 @@ export class CoursesService {
 
   //***** Add teacher to a course *****//
   //! Only Admin
-  async addTeacherToCourse(
-    addTeacherDto: AddTeacherDto,
-  ): Promise<CoursesResponse> {
+  async addTeacherToCourse(addTeacherDto: AddTeacherDto): Promise<Response> {
     const course = await this.courseRepository.findOne(addTeacherDto.courseId);
     if (!course) {
       throw new ForbiddenException('El curso no existe');
@@ -158,7 +166,7 @@ export class CoursesService {
   //! Only Admin
   async removeTeacherFromCourse(
     addTeacherDto: AddTeacherDto,
-  ): Promise<CoursesResponse> {
+  ): Promise<Response> {
     const course = await this.courseRepository.findOne(addTeacherDto.courseId);
     if (!course) {
       throw new ForbiddenException('El curso no existe');
@@ -200,7 +208,7 @@ export class CoursesService {
 
   //***** Add user to a course *****//
   //! Only Admin
-  async addUserToCourse(addUserDto: AddUserDto): Promise<CoursesResponse> {
+  async addUserToCourse(addUserDto: AddUserDto): Promise<Response> {
     const course = await this.courseRepository.findOne(addUserDto.courseId);
     if (!course) {
       throw new ForbiddenException('El curso no existe');
@@ -214,7 +222,7 @@ export class CoursesService {
 
   //*****Remove user from a course *****//
   //! Only Admin
-  async removeUserFromCourse(addUserDto: AddUserDto): Promise<CoursesResponse> {
+  async removeUserFromCourse(addUserDto: AddUserDto): Promise<Response> {
     const course = await this.courseRepository.findOne(addUserDto.courseId);
     if (!course) {
       throw new ForbiddenException('El curso no existe');

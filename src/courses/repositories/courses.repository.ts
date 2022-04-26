@@ -4,7 +4,7 @@ import { EntityRepository, Repository } from 'typeorm';
 import { AddTeacherDto, AddUserDto, UpdateCourseDto } from '../dtos';
 import { Status } from '../enum';
 import { Course } from '../models/course.model';
-import { CoursesResponse } from '../types';
+import { Response } from '../types';
 
 @EntityRepository(Course)
 export class CoursesRepository extends Repository<Course> {
@@ -22,10 +22,7 @@ export class CoursesRepository extends Repository<Course> {
   }
 
   //***** Update course *****//
-  async updateCourse(
-    id: string,
-    course: UpdateCourseDto,
-  ): Promise<CoursesResponse> {
+  async updateCourse(id: string, course: UpdateCourseDto): Promise<Response> {
     const updateCourse = await this.createQueryBuilder()
       .update(Course)
       .set(course)
@@ -42,7 +39,7 @@ export class CoursesRepository extends Repository<Course> {
   }
 
   //***** Delete course *****//
-  async deleteCourse(id: string): Promise<CoursesResponse> {
+  async deleteCourse(id: string): Promise<Response> {
     const course = await this.findOne(id);
     if (!course) {
       throw new ForbiddenException('El curso no existe');
@@ -59,6 +56,34 @@ export class CoursesRepository extends Repository<Course> {
       statusCode: HttpStatus.OK,
       message: 'Curso eliminado con exito',
     };
+    return response;
+  }
+
+  //***** Feature a course *****//
+  async setFeatured(id: string): Promise<Response> {
+    let response: Response | PromiseLike<Response>;
+    const course = await this.findOne(id);
+    if (!course) {
+      throw new ForbiddenException('El curso no existe');
+    }
+    if (course.featured === true) {
+      course.featured = false;
+      response = {
+        statusCode: HttpStatus.OK,
+        message: 'Curso eliminado de destacados',
+      };
+    } else {
+      course.featured = true;
+      response = {
+        statusCode: HttpStatus.OK,
+        message: 'Curso destacado con exito',
+      };
+    }
+    await this.createQueryBuilder()
+      .update()
+      .set({ featured: course.featured })
+      .where('id = :id', { id })
+      .execute();
     return response;
   }
 
@@ -86,9 +111,7 @@ export class CoursesRepository extends Repository<Course> {
   }
 
   //***** Add teacher to a course *****//
-  async addTeacherToCourse(
-    addTeacherDto: AddTeacherDto,
-  ): Promise<CoursesResponse> {
+  async addTeacherToCourse(addTeacherDto: AddTeacherDto): Promise<Response> {
     try {
       await this.createQueryBuilder()
         .relation(Course, 'teachers')
@@ -112,7 +135,7 @@ export class CoursesRepository extends Repository<Course> {
   //***** Remove teacher from a course *****//
   async removeTeacherFromCourse(
     addTeacherDto: AddTeacherDto,
-  ): Promise<CoursesResponse> {
+  ): Promise<Response> {
     try {
       await this.createQueryBuilder()
         .relation(Course, 'teachers')
@@ -154,7 +177,7 @@ export class CoursesRepository extends Repository<Course> {
   }
 
   //***** Remove user from a course *****//
-  async removeUserFromCourse(addUserDto: AddUserDto): Promise<CoursesResponse> {
+  async removeUserFromCourse(addUserDto: AddUserDto): Promise<Response> {
     try {
       await this.createQueryBuilder()
         .relation(Course, 'users')

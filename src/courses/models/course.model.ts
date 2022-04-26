@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Boolean, Level, Status } from '../enum';
+import { Category } from './category.model';
 
 @Entity()
 @Unique(['title'])
@@ -50,6 +51,9 @@ export class Course {
   @Column({ default: 0 })
   numberOfStudents: number;
 
+  @Column({ default: false })
+  featured: boolean;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
@@ -63,4 +67,8 @@ export class Course {
   @ManyToMany((type) => User, (user) => user.courses)
   @JoinTable()
   teachers: User[];
+
+  @ManyToMany((type) => Category, (category) => category.courses)
+  @JoinTable()
+  categories: Category[];
 }
