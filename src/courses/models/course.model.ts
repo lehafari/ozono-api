@@ -27,7 +27,7 @@ export class Course {
   price: number;
 
   @Column()
-  duration: number;
+  duration: string;
 
   @Column()
   category: string;

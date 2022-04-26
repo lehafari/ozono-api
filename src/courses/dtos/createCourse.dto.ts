@@ -19,9 +19,9 @@ export class CreateCourseDto {
   price: number;
 
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  duration: number;
+  duration: string;
 
   @ApiProperty()
   @IsString()

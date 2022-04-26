@@ -25,9 +25,9 @@ export class UpdateCourseDto {
   price: number;
 
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  duration: number;
+  duration: string;
 
   @ApiProperty()
   @IsString()
