@@ -22,20 +22,24 @@ export class CoursesRepository extends Repository<Course> {
   }
 
   //***** Update course *****//
-  async updateCourse(id: string, course: UpdateCourseDto): Promise<Response> {
-    const updateCourse = await this.createQueryBuilder()
-      .update(Course)
-      .set(course)
-      .where('id = :id', { id })
-      .execute();
-    if (!updateCourse) {
-      throw new ForbiddenException('El curso no existe');
+  async updateCourse(id: string, course: UpdateCourseDto): Promise<Course> {
+    try {
+      const updateCourse = await this.createQueryBuilder()
+        .update(Course)
+        .set(course)
+        .where('id = :id', { id })
+        .execute();
+      if (!updateCourse) {
+        throw new ForbiddenException('El curso no existe');
+      }
+      const courseUpdated = await this.findOne(id);
+      return courseUpdated;
+    } catch (error) {
+      console.log(error);
+      if (error.code === '23505') {
+        throw new ForbiddenException('El curso ya existe');
+      }
     }
-    const response = {
-      statusCode: HttpStatus.OK,
-      message: 'Curso actualizado con exito',
-    };
-    return response;
   }
 
   //***** Delete course *****//
@@ -85,6 +89,28 @@ export class CoursesRepository extends Repository<Course> {
       .where('id = :id', { id })
       .execute();
     return response;
+  }
+
+  //***** Upload course image *****//
+  async uploadCourseImage(
+    courseImage: any,
+    courseId: string,
+  ): Promise<Response> {
+    const resp = await this.createQueryBuilder()
+      .update(Course)
+      .set({ image: courseImage })
+      .where('id = :id', { id: courseId })
+      .execute();
+    if (!resp) {
+      throw new ForbiddenException('El curso no existe');
+    }
+    if (resp) {
+      const response = {
+        statusCode: HttpStatus.OK,
+        message: 'Imagen actualizada con exito',
+      };
+      return response;
+    }
   }
 
   //!   *******************************************

@@ -83,7 +83,7 @@ export class CoursesService {
   async updateCourse(
     courseId: string,
     course: UpdateCourseDto,
-  ): Promise<Response> {
+  ): Promise<Course> {
     const updatedCourse = await this.courseRepository.updateCourse(
       courseId,
       course,
@@ -122,6 +122,17 @@ export class CoursesService {
       throw new ForbiddenException('El curso no existe');
     }
     return this.courseRepository.setFeatured(courseId);
+  }
+
+  //***** Upload course image *****//
+  async uploadCourseImage(
+    courseImage: any,
+    courseId: string,
+  ): Promise<Response> {
+    if (!courseImage) {
+      throw new ForbiddenException('Tienes que subir una imagen');
+    }
+    return this.courseRepository.uploadCourseImage(courseImage, courseId);
   }
 
   //!   *******************************************

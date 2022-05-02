@@ -8,22 +8,28 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { diskStorage } from 'multer';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { JwtPayload } from 'src/auth/types';
+import { editFileName, imageFileFilter } from 'src/upload';
 import { GetUser } from 'src/users/decorators';
 import { confirmPasswordDto } from 'src/users/dtos/confirmPassword.dto';
 import { Roles } from 'src/users/enum/roles.enum';
 import { User } from 'src/users/models/user.model';
 import { AddTeacherDto, AddUserDto, CreateCourseDto } from '../dtos';
 import { Status } from '../enum';
+import { Course } from '../models/course.model';
 import { CoursesService } from '../services/courses.service';
 import { Response } from '../types';
 
@@ -83,7 +89,7 @@ export class CoursesController {
   async updateCourse(
     @Param('id') id: string,
     @Body() createCourseDto: CreateCourseDto,
-  ): Promise<Response> {
+  ): Promise<Course> {
     return this.coursesService.updateCourse(id, createCourseDto);
   }
 
@@ -112,6 +118,25 @@ export class CoursesController {
   @Put('featured/:id')
   async setFeatured(@Param('id') id: string): Promise<Response> {
     return this.coursesService.setFeatured(id);
+  }
+
+  //***** Upload course image *****//
+  // @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Upload course image' })
+  @Put('courseImage/upload/:id')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './files/courses',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
+  async uploadCourseImage(@Param('id') id: string, @UploadedFile() file) {
+    console.log(file);
+    return `${id}/${file.filename}`;
   }
 
   //!   *******************************************

@@ -20,9 +20,6 @@ import { Course } from 'src/courses/models/course.model';
 @Entity()
 @Unique(['email', 'username'])
 export class User {
-  if(arg0: boolean) {
-    throw new Error('Method not implemented.');
-  }
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

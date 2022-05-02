@@ -33,6 +33,9 @@ export class Course {
   @Column()
   category: string;
 
+  @Column({ nullable: true })
+  image: string;
+
   @Column({ enum: Level, default: Level.PRINCIPIANTE })
   level: Level;
 
