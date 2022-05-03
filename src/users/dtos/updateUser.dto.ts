@@ -36,4 +36,14 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   country: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  ci: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  phone: string;
 }

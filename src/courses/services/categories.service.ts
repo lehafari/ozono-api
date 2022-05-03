@@ -5,6 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { CreateCategoryDto } from '../dtos';
+import { Category } from '../models/category.model';
 import { CategoriesRepository } from '../repositories/categories.repository';
 import { Response } from '../types';
 
@@ -15,16 +16,14 @@ export class CategoriesService {
   //***** Create Category ******//
   async createCategory(
     createCategoryDto: CreateCategoryDto,
-  ): Promise<Response> {
+  ): Promise<Category> {
     try {
       const categoryEntity = await this.categoriesRepository.create(
         createCategoryDto,
       );
       await this.categoriesRepository.save(categoryEntity);
-      return {
-        statusCode: HttpStatus.CREATED,
-        message: 'Categoria creada',
-      };
+      console.log(categoryEntity);
+      return categoryEntity;
     } catch (error) {
       if (error.code === '23505') {
         throw new ForbiddenException('La categoría ya existe');

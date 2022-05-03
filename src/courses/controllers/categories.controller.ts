@@ -30,7 +30,9 @@ export class CategoriesController {
   @ApiBearerAuth()
   @ApiBody({ type: CreateCategoryDto })
   @Put('/create')
-  async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
+  async createCategory(
+    @Body() createCategoryDto: CreateCategoryDto,
+  ): Promise<any> {
     return this.categoriesService.createCategory(createCategoryDto);
   }
 
