@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -37,7 +45,7 @@ export class CategoriesController {
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN))
   @ApiOperation({ summary: 'Delete category' })
   @ApiBearerAuth()
-  @Put('/delete/:id')
+  @Delete('/delete/:id')
   async deleteCategory(@Param('id') id: string) {
     return this.categoriesService.deleteCategory(id);
   }
