@@ -57,7 +57,7 @@ export class CategoriesController {
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN))
   @ApiOperation({ summary: 'Delete many categories' })
   @ApiBearerAuth()
-  @Delete('/deleteCategories')
+  @Delete('/delete-categories')
   async deleteCategories(@Body() ids: string[]) {
     return this.categoriesService.deleteCategories(ids);
   }
