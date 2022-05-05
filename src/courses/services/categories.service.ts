@@ -36,7 +36,6 @@ export class CategoriesService {
   async getAllCategories() {
     try {
       const categories = await this.categoriesRepository.find();
-      console.log(categories);
       return categories;
     } catch (error) {
       throw new ForbiddenException(error.message);
@@ -61,20 +60,15 @@ export class CategoriesService {
   }
 
   //***** Delete categories ******//
-  async deleteCategories(deleteCategories: DeleteCategories) {
+  async deleteCategories(deleteCategories: string[]) {
     try {
-      const categories = await this.categoriesRepository.find();
-      const categoriesToDelete = categories.filter(
-        (category) =>
-          deleteCategories.ids.find(
-            (id) => id.id === category.id && id.title === category.title,
-          ) !== undefined,
+      const categories = await this.categoriesRepository.findByIds(
+        deleteCategories,
       );
-      if (categoriesToDelete.length === 0) {
-        throw new ForbiddenException('No existen categorias para eliminar');
+      if (categories.length !== deleteCategories.length) {
+        throw new ForbiddenException('Alguna categoría no existe');
       }
-      console.log(categoriesToDelete);
-      categoriesToDelete.forEach(async (category) => {
+      categories.forEach(async (category) => {
         await this.categoriesRepository.delete(category.id);
       });
       return {
@@ -86,3 +80,26 @@ export class CategoriesService {
     }
   }
 }
+
+// try {
+//   const categories = await this.categoriesRepository.find();
+//   const categoriesToDelete = categories.filter(
+//     (category) =>
+//       deleteCategories.ids.find(
+//         (id) => id.id === category.id && id.title === category.title,
+//       ) !== undefined,
+//   );
+//   if (categoriesToDelete.length === 0) {
+//     throw new ForbiddenException('No existen categorias para eliminar');
+//   }
+//   console.log(categoriesToDelete);
+//   categoriesToDelete.forEach(async (category) => {
+//     await this.categoriesRepository.delete(category.id);
+//   });
+//   return {
+//     statusCode: HttpStatus.OK,
+//     message: 'Categorias eliminadas',
+//   };
+// } catch (error) {
+//   throw new ForbiddenException(error.message);
+// }

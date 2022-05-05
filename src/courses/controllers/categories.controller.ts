@@ -58,7 +58,7 @@ export class CategoriesController {
   @ApiOperation({ summary: 'Delete many categories' })
   @ApiBearerAuth()
   @Delete('/deleteCategories')
-  async deleteCategories(@Body() ids: DeleteCategories) {
+  async deleteCategories(@Body() ids: string[]) {
     return this.categoriesService.deleteCategories(ids);
   }
 }
