@@ -18,7 +18,7 @@ import { Roles } from '../enum/roles.enum';
 import { Course } from 'src/courses/models/course.model';
 
 @Entity()
-@Unique(['email', 'username'])
+@Unique(['email', 'username', 'ci'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;

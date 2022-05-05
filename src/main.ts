@@ -15,7 +15,11 @@ async function bootstrap() {
   app.use(compression());
 
   //***** Helmet *****//
-  app.use(helmet());
+  // app.use(
+  //   helmet({
+  //     crossOriginResourcePolicy: false,
+  //   }),
+  // );
 
   //***** Global filter *****//
   app.useGlobalFilters(new AllExceptionFilter());

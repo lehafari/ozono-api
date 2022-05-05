@@ -88,9 +88,11 @@ export class UsersController {
       fileFilter: imageFileFilter,
     }),
   )
-  async uploadedFile(@UploadedFile() file, @GetUser() user): Promise<number> {
+  async uploadedFile(
+    @UploadedFile() file: any,
+    @GetUser() user,
+  ): Promise<number> {
     try {
-      console.log(`${file.filename} uploaded  user ${user.sub}`);
       file.user = user.sub;
       const profileImage = file;
       return this.usersService.uploadProfileImage(profileImage);
@@ -101,8 +103,8 @@ export class UsersController {
 
   //***** Get Profile Image*****//
 
-  @UseGuards(JwtGuard)
-  @ApiBearerAuth()
+  // @UseGuards(JwtGuard)
+  // @ApiBearerAuth()
   @ApiOperation({ summary: 'Get profile image' })
   @Get('profileImage/:imgpath')
   seeUploadedFile(@Param('imgpath') image: string, @Res() res): any {

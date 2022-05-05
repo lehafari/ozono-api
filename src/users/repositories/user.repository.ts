@@ -15,15 +15,22 @@ export class UsersRepository extends Repository<User> {
 
   //***** Update User*****//
   async updateUser(id: string, user: UpdateUserDto): Promise<number> {
-    const updateUser = await this.createQueryBuilder()
-      .update(User)
-      .set(user)
-      .where('id = :id', { id })
-      .execute();
-    if (!updateUser) {
-      throw new ForbiddenException('El usuario no existe');
+    try {
+      await this.createQueryBuilder()
+        .update(User)
+        .set(user)
+        .where('id = :id', { id })
+        .execute();
+      return HttpStatus.OK;
+    } catch (error) {
+      console.log(error);
+      if (error.code === '23505' && error.detail.includes('username')) {
+        throw new ForbiddenException('El usuario ya existe');
+      }
+      if (error.code === '23505' && error.detail.includes('email')) {
+        throw new ForbiddenException('El email ya existe');
+      }
     }
-    return HttpStatus.OK;
   }
 
   //***** Upload Profile image *****//

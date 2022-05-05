@@ -38,11 +38,15 @@ export class UsersService {
 
   //***** Update user*****//
   async updateUser(id: string, user: UpdateUserDto): Promise<number> {
-    const updateUser = await this.usersRepository.updateUser(id, user);
-    if (!updateUser) {
-      throw new ForbiddenException('El usuario no existe');
+    try {
+      const updateUser = await this.usersRepository.updateUser(id, user);
+      return updateUser;
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ForbiddenException('El usuario o el email ya existen');
+      }
+      throw new BadRequestException(error.message);
     }
-    return updateUser;
   }
 
   //***** Update Hash Refresh Token *****//

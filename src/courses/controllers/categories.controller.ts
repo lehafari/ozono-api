@@ -17,6 +17,7 @@ import {
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { Roles } from 'src/users/enum/roles.enum';
 import { CreateCategoryDto } from '../dtos';
+import { DeleteCategories } from '../dtos/deleteCategories.dto';
 import { CategoriesService } from '../services/categories.service';
 
 @ApiTags('categories')
@@ -50,5 +51,14 @@ export class CategoriesController {
   @Delete('/delete/:id')
   async deleteCategory(@Param('id') id: string) {
     return this.categoriesService.deleteCategory(id);
+  }
+
+  //***** Delete categories ******//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN))
+  @ApiOperation({ summary: 'Delete many categories' })
+  @ApiBearerAuth()
+  @Delete('/deleteCategories')
+  async deleteCategories(@Body() ids: DeleteCategories) {
+    return this.categoriesService.deleteCategories(ids);
   }
 }

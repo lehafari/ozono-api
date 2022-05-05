@@ -4,7 +4,7 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-import { CreateCategoryDto } from '../dtos';
+import { CreateCategoryDto, DeleteCategories } from '../dtos';
 import { Category } from '../models/category.model';
 import { CategoriesRepository } from '../repositories/categories.repository';
 import { Response } from '../types';
@@ -54,6 +54,32 @@ export class CategoriesService {
       return {
         statusCode: HttpStatus.OK,
         message: 'Categoria eliminada',
+      };
+    } catch (error) {
+      throw new ForbiddenException(error.message);
+    }
+  }
+
+  //***** Delete categories ******//
+  async deleteCategories(deleteCategories: DeleteCategories) {
+    try {
+      const categories = await this.categoriesRepository.find();
+      const categoriesToDelete = categories.filter(
+        (category) =>
+          deleteCategories.ids.find(
+            (id) => id.id === category.id && id.title === category.title,
+          ) !== undefined,
+      );
+      if (categoriesToDelete.length === 0) {
+        throw new ForbiddenException('No existen categorias para eliminar');
+      }
+      console.log(categoriesToDelete);
+      categoriesToDelete.forEach(async (category) => {
+        await this.categoriesRepository.delete(category.id);
+      });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Categorias eliminadas',
       };
     } catch (error) {
       throw new ForbiddenException(error.message);
