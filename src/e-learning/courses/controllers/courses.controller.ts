@@ -135,7 +135,6 @@ export class CoursesController {
     }),
   )
   async uploadCourseImage(@Param('id') id: string, @UploadedFile() file) {
-    console.log(file);
     return `${id}/${file.filename}`;
   }
 

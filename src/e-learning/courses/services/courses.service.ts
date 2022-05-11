@@ -186,7 +186,6 @@ export class CoursesService {
       addTeacherDto.courseId,
       addTeacherDto.teacherId,
     );
-    console.log(teacher);
     if (!teacher) {
       throw new ForbiddenException(
         'El profesor no esta registrado en el curso',

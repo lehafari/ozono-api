@@ -23,7 +23,6 @@ export class UsersRepository extends Repository<User> {
         .execute();
       return HttpStatus.OK;
     } catch (error) {
-      console.log(error);
       if (error.code === '23505' && error.detail.includes('username')) {
         throw new ForbiddenException('El usuario ya existe');
       }
@@ -93,7 +92,6 @@ export class UsersRepository extends Repository<User> {
 
   //***** Find users *****//
   async findUsers(value: string): Promise<User[]> {
-    console.log(value);
     const users = await this.createQueryBuilder()
       .where({
         username: Like(`%${value}%`),
@@ -113,7 +111,6 @@ export class UsersRepository extends Repository<User> {
     if (users.length === 0) {
       throw new ForbiddenException('No hay usuarios');
     }
-    console.log(users);
     users.map((user) => {
       delete user.password;
       delete user.refreshToken;

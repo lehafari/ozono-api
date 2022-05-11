@@ -1,3 +1,4 @@
+import { Section } from 'src/e-learning/sections/models/section.model';
 import { User } from 'src/users/models/user.model';
 import {
   Column,
@@ -5,6 +6,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
@@ -74,4 +76,7 @@ export class Course {
   @ManyToMany((type) => Category, (category) => category.courses)
   @JoinTable()
   categories: Category[];
+
+  @OneToMany(() => Section, (section) => section.course)
+  sections: Section[];
 }

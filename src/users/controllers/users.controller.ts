@@ -128,7 +128,6 @@ export class UsersController {
         confirmPassword.password,
       );
     } catch (error) {
-      console.log(error);
       throw new BadRequestException(
         error.message || 'Ha ocurrido un error eliminando el usuario',
       );

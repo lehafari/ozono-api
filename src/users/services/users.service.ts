@@ -76,7 +76,6 @@ export class UsersService {
       throw new NotFoundException('No existe la imagen');
     }
     const img = res.sendFile(image, { root: './files' });
-    console.log(img);
     return img;
   }
 

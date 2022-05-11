@@ -15,7 +15,7 @@ import {
   ManyToMany,
 } from 'typeorm';
 import { Roles } from '../enum/roles.enum';
-import { Course } from 'src/courses/models/course.model';
+import { Course } from 'src/e-learning/courses/models/course.model';
 
 @Entity()
 @Unique(['email', 'username', 'ci'])

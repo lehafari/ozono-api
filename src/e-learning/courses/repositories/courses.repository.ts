@@ -35,7 +35,6 @@ export class CoursesRepository extends Repository<Course> {
       const courseUpdated = await this.findOne(id);
       return courseUpdated;
     } catch (error) {
-      console.log(error);
       if (error.code === '23505') {
         throw new ForbiddenException('El curso ya existe');
       }
