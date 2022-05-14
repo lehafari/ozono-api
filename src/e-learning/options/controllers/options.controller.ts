@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { Roles } from 'src/users/enum/roles.enum';
@@ -21,5 +21,14 @@ export class OptionsController {
     @Param('questionId') questionId: string,
   ): Promise<Option> {
     return await this.optionsService.createOption(option, questionId);
+  }
+
+  //***** Find options by question *****//
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Find options by question' })
+  @Get('find/:questionId')
+  async findOptionsByQuestion(@Param('questionId') questionId: string) {
+    return await this.optionsService.findOptionsByQuestion(questionId);
   }
 }
