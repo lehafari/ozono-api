@@ -27,7 +27,12 @@ import { GetUser } from 'src/users/decorators';
 import { confirmPasswordDto } from 'src/users/dtos/confirmPassword.dto';
 import { Roles } from 'src/users/enum/roles.enum';
 import { User } from 'src/users/models/user.model';
-import { AddTeacherDto, AddUserDto, CreateCourseDto } from '../dtos';
+import {
+  AddTeacherDto,
+  AddUserDto,
+  CreateCourseDto,
+  UpdateCourseDto,
+} from '../dtos';
 import { Status } from '../enum';
 import { Course } from '../models/course.model';
 import { CoursesService } from '../services/courses.service';
@@ -88,9 +93,9 @@ export class CoursesController {
   @Put('update/:id')
   async updateCourse(
     @Param('id') id: string,
-    @Body() createCourseDto: CreateCourseDto,
+    @Body() updateCourseDto: UpdateCourseDto,
   ): Promise<Course> {
-    return this.coursesService.updateCourse(id, createCourseDto);
+    return this.coursesService.updateCourse(id, updateCourseDto);
   }
 
   //***** Delete course *****//

@@ -1,4 +1,5 @@
 import { Option } from 'src/e-learning/options/models/option.model';
+import { Quiz } from 'src/e-learning/quizes/models/quiz.model';
 
 import {
   Column,
@@ -24,4 +25,7 @@ export class Question {
 
   @OneToMany(() => Option, (option) => option.question)
   options: Option[];
+
+  @ManyToOne(() => Quiz, (quiz) => quiz.questions)
+  quiz: Quiz;
 }
