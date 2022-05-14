@@ -1,9 +1,16 @@
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { Roles } from 'src/users/enum/roles.enum';
 import { CreateSectionDto } from '../dtos';
-import { Section } from '../models/section.model';
 import { SectionsService } from '../services/sections.service';
 
 @ApiTags('sections')
@@ -13,15 +20,14 @@ export class SectionsController {
 
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
   @ApiOperation({ summary: 'Create a section' })
-  @ApiBody({ type: Section })
+  @ApiBody({ type: CreateSectionDto })
   @ApiBearerAuth()
   @Put('/create/:courseId')
   async createSection(
-    @Body() section: CreateSectionDto,
+    @Body() createSectionDto: CreateSectionDto,
     @Param('courseId') courseId: string,
   ) {
-    console.log(section, courseId);
-    return await this.sectionsService.createSection(section, courseId);
+    return await this.sectionsService.createSection(createSectionDto, courseId);
   }
 
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
@@ -30,5 +36,13 @@ export class SectionsController {
   @Get('/:courseId')
   async findSectionByCourse(@Param('courseId') courseId: string) {
     return await this.sectionsService.findSectionByCourse(courseId);
+  }
+
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
+  @ApiOperation({ summary: 'Delete a section' })
+  @ApiBearerAuth()
+  @Delete('/:sectionId')
+  async deleteSection(@Param('sectionId') sectionId: string) {
+    return await this.sectionsService.deleteSection(sectionId);
   }
 }

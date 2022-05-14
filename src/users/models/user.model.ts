@@ -13,9 +13,11 @@ import {
   Unique,
   OneToMany,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Roles } from '../enum/roles.enum';
 import { Course } from 'src/e-learning/courses/models/course.model';
+import { Score } from 'src/e-learning/score/models/score.model';
 
 @Entity()
 @Unique(['email', 'username', 'ci'])
@@ -68,6 +70,10 @@ export class User {
   @Column({ enum: Roles, default: Roles.USER })
   role: Roles;
 
-  @ManyToMany((type) => Course, (course) => course.users)
+  @ManyToMany(() => Course, (course) => course.users)
+  @JoinTable()
   courses: Course[];
+
+  @OneToMany(() => Score, (score) => score.user)
+  scores: Score[];
 }

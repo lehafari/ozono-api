@@ -20,6 +20,19 @@ export class SectionsService {
   }
 
   async findSectionByCourse(courseId: string): Promise<Section[]> {
-    return await this.sectionRepository.findSectionByCourse(courseId);
+    const sections = await this.sectionRepository.findSectionByCourse(courseId);
+    if (sections.length === 0 || sections === [] || sections === null) {
+      throw new ForbiddenException('No hay secciones para este curso');
+    }
+    return sections;
+  }
+
+  async findSectionById(sectionId: string): Promise<Section> {
+    return await this.sectionRepository.findOne(sectionId);
+  }
+
+  async deleteSection(sectionId: string) {
+    await this.sectionRepository.delete(sectionId);
+    return { message: 'Seccion eliminada', status: 200 };
   }
 }

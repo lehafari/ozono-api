@@ -6,6 +6,9 @@ import { DatabaseModule } from './database/database.module';
 import { UploadModule } from './upload/upload.module';
 import { UsersModule } from './users/users.module';
 import { SectionsModule } from './e-learning/sections/sections.module';
+import { ScoreModule } from './e-learning/score/score.module';
+import { QuizModule } from './e-learning/quizes/quiz.module';
+import { OptionsModule } from './e-learning/options/option.module';
 
 @Module({
   imports: [
@@ -16,6 +19,9 @@ import { SectionsModule } from './e-learning/sections/sections.module';
     UploadModule,
     CoursesModule,
     SectionsModule,
+    ScoreModule,
+    QuizModule,
+    OptionsModule,
   ],
 })
 export class AppModule {}

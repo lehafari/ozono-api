@@ -1,8 +1,9 @@
-import { EntityRepository, Like, Repository } from 'typeorm';
+import { EntityRepository, getRepository, Like, Repository } from 'typeorm';
 import { ForbiddenException, HttpStatus } from '@nestjs/common';
 import { User } from '../models/user.model';
 import { UpdateUserDto } from '../dtos';
 import argon2 from 'argon2';
+import { Course } from 'src/e-learning/courses/models/course.model';
 
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {

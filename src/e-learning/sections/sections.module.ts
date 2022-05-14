@@ -16,5 +16,6 @@ import { SectionsService } from './services/sections.service';
     CoursesModule,
   ],
   providers: [SectionsService],
+  exports: [SectionsService],
 })
 export class SectionsModule {}
