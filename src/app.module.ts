@@ -9,6 +9,7 @@ import { SectionsModule } from './e-learning/sections/sections.module';
 import { ScoreModule } from './e-learning/score/score.module';
 import { QuizModule } from './e-learning/quizes/quiz.module';
 import { OptionsModule } from './e-learning/options/option.module';
+import { QuestionModule } from './e-learning/questions/question.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { OptionsModule } from './e-learning/options/option.module';
     ScoreModule,
     QuizModule,
     OptionsModule,
+    QuestionModule,
   ],
 })
 export class AppModule {}

@@ -15,7 +15,7 @@ export class OptionsController {
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create option' })
-  @Put('create/:quizId')
+  @Put('create/:questionId')
   async createOption(
     @Body() option: CreateOptionDto,
     @Param('questionId') questionId: string,

@@ -18,6 +18,7 @@ import { SectionsService } from '../services/sections.service';
 export class SectionsController {
   constructor(private readonly sectionsService: SectionsService) {}
 
+  //***** Create a section ******//
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
   @ApiOperation({ summary: 'Create a section' })
   @ApiBody({ type: CreateSectionDto })
@@ -30,6 +31,7 @@ export class SectionsController {
     return await this.sectionsService.createSection(createSectionDto, courseId);
   }
 
+  //***** Find section by course *****//
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
   @ApiOperation({ summary: 'Get sections by course' })
   @ApiBearerAuth()
