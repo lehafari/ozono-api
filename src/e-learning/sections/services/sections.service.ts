@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CoursesService } from 'src/e-learning/courses/services/courses.service';
-import { CreateSectionDto } from '../dtos';
+import { CreateSectionDto, UpdateSectionDto } from '../dtos';
 import { Section } from '../models/section.model';
 import { SectionRepository } from '../repositories/sections.repository';
 
@@ -35,7 +35,7 @@ export class SectionsService {
   }
 
   //***** Update a Section *****//
-  async updateSection(sectionId: string, section: CreateSectionDto) {
+  async updateSection(sectionId: string, section: UpdateSectionDto) {
     const updatedSections = await this.sectionRepository.updateSection(
       sectionId,
       section,

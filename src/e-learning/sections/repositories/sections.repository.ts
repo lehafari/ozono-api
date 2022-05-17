@@ -48,6 +48,10 @@ export class SectionRepository extends Repository<Section> {
       if (error.code === '23505') {
         throw new ForbiddenException('La seccion ya existe');
       }
+      if (error.code === '22P02') {
+        throw new ForbiddenException('La seccion no tiene un formato correcto');
+      }
+      throw new ForbiddenException('Error al actualizar la seccion');
     }
   }
 

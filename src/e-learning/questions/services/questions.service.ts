@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { QuizService } from 'src/e-learning/quizes/services/quiz.service';
+import { UpdateQuestionsDto } from '../dtos';
 import { CreateQuestionsDto } from '../dtos/createQuestions.dto';
 import { QuestionRepository } from '../repositories/question.repository';
 
@@ -36,6 +37,18 @@ export class QuestionsService {
       throw new ForbiddenException('La pregunta no existe');
     }
     return question;
+  }
+
+  //***** Update a question *****//
+  async updateQuestion(questionId: string, question: UpdateQuestionsDto) {
+    const updatedQuestion = await this.questionRepository.updateQuestion(
+      questionId,
+      question,
+    );
+    if (!updatedQuestion) {
+      throw new ForbiddenException('La pregunta no existe');
+    }
+    return updatedQuestion;
   }
 
   //***** Delete a question *****//

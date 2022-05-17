@@ -42,6 +42,16 @@ export class QuizController {
   }
 
   //***** Update quiz *****//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
+  @ApiOperation({ summary: 'Update quiz' })
+  @ApiBearerAuth()
+  @Put('update/:quizId')
+  async updateQuiz(
+    @Param('quizId') quizId: string,
+    @Body() updateQuizDto: CreateQuizDto,
+  ) {
+    return await this.quizService.updateQuiz(quizId, updateQuizDto);
+  }
 
   //***** Delete quiz by id *****//
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))

@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { SectionsService } from 'src/e-learning/sections/services/sections.service';
-import { CreateQuizDto } from '../dtos';
+import { CreateQuizDto, UpdateQuizDto } from '../dtos';
 import { QuizRepository } from '../repositories/quizes.repository';
 
 @Injectable()
@@ -31,6 +31,15 @@ export class QuizService {
       throw new Error('No hay Quizes para esta seccion');
     }
     return quizes;
+  }
+
+  //***** Update a quiz *****//
+  async updateQuiz(quizId: string, quiz: UpdateQuizDto) {
+    const updatedQuiz = await this.quizRepository.updateQuiz(quizId, quiz);
+    if (!updatedQuiz) {
+      throw new ForbiddenException('El Quiz no existe');
+    }
+    return updatedQuiz;
   }
 
   //***** Delete a quiz *****//

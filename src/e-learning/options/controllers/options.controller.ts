@@ -10,7 +10,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { Roles } from 'src/users/enum/roles.enum';
-import { CreateOptionDto } from '../dtos';
+import { CreateOptionDto, UpdateOptionDto } from '../dtos';
 import { Option } from '../models/option.model';
 import { OptionsService } from '../services/options.service';
 
@@ -41,6 +41,16 @@ export class OptionsController {
   }
 
   //***** Update option *****//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
+  @ApiOperation({ summary: 'Delete a option' })
+  @ApiBearerAuth()
+  @Put('update/:optionId')
+  async updateOption(
+    @Param('optionId') optionId: string,
+    @Body() option: UpdateOptionDto,
+  ) {
+    return await this.optionsService.updateOption(optionId, option);
+  }
 
   //***** Delete option by id *****//
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))

@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { QuestionsService } from 'src/e-learning/questions/services/questions.service';
-import { CreateOptionDto } from '../dtos';
+import { CreateOptionDto, UpdateOptionDto } from '../dtos';
 import { Option } from '../models/option.model';
 import { OptionsRepository } from '../repositories/options.repository';
 
@@ -37,6 +37,18 @@ export class OptionsService {
   //***** Find option by id *****//
   async findOptionById(optionId: string) {
     return this.optionsRepository.findOne(optionId);
+  }
+
+  //***** Update a option *****//
+  async updateOption(optionId: string, option: UpdateOptionDto) {
+    const updatedOption = await this.optionsRepository.updateOption(
+      optionId,
+      option,
+    );
+    if (!updatedOption) {
+      throw new ForbiddenException('La opcion no existe');
+    }
+    return updatedOption;
   }
 
   //***** Delete a option *****//

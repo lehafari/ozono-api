@@ -1,7 +1,7 @@
 import { ForbiddenException, HttpStatus } from '@nestjs/common';
 import { Section } from 'src/e-learning/sections/models/section.model';
 import { EntityRepository, Repository } from 'typeorm';
-import { CreateQuizDto } from '../dtos';
+import { CreateQuizDto, UpdateQuizDto } from '../dtos';
 import { Quiz } from '../models/quiz.model';
 
 @EntityRepository(Quiz)
@@ -38,6 +38,33 @@ export class QuizRepository extends Repository<Quiz> {
       },
     });
     return quizes;
+  }
+
+  //***** Update a quiz *****//
+  async updateQuiz(id: string, quiz: UpdateQuizDto) {
+    try {
+      const updateQuiz = await this.createQueryBuilder()
+        .update(Quiz)
+        .set(quiz)
+        .where('id = :id', { id })
+        .execute();
+      if (!updateQuiz) {
+        throw new ForbiddenException('El quiz no existe');
+      }
+      const response = {
+        statusCode: HttpStatus.OK,
+        message: 'Quiz actualizado con exito',
+      };
+      return response;
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ForbiddenException('El quiz ya existe');
+      }
+      if (error.code === '22P02') {
+        throw new ForbiddenException('El quiz no tiene un formato correcto');
+      }
+      throw new ForbiddenException('Error al actualizar el quiz');
+    }
   }
 
   //***** Delete a quiz *****//

@@ -11,7 +11,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 
 import { Roles } from 'src/users/enum/roles.enum';
-import { CreateQuestionsDto } from '../dtos';
+import { CreateQuestionsDto, UpdateQuestionsDto } from '../dtos';
 
 import { QuestionsService } from '../services/questions.service';
 
@@ -42,6 +42,16 @@ export class QuestionsController {
   }
 
   //****** Update question *****//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
+  @ApiOperation({ summary: 'Update question' })
+  @ApiBearerAuth()
+  @Put('update/:questionId')
+  async updateQuestion(
+    @Param('questionId') questionId: string,
+    @Body() updateQuestionDto: UpdateQuestionsDto,
+  ) {
+    return this.questionService.updateQuestion(questionId, updateQuestionDto);
+  }
 
   //****** Delete question by id *****//
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))

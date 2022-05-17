@@ -1,6 +1,7 @@
 import { ForbiddenException, HttpStatus } from '@nestjs/common';
 import { Quiz } from 'src/e-learning/quizes/models/quiz.model';
 import { EntityRepository, Repository } from 'typeorm';
+import { UpdateQuestionsDto } from '../dtos';
 import { CreateQuestionsDto } from '../dtos/createQuestions.dto';
 import { Question } from '../models/question.model';
 
@@ -27,6 +28,35 @@ export class QuestionRepository extends Repository<Question> {
       },
     });
     return questions;
+  }
+
+  //***** Update a question *****//
+  async updateQuestion(id: string, question: UpdateQuestionsDto) {
+    try {
+      const updateQuestion = await this.createQueryBuilder()
+        .update(Question)
+        .set(question)
+        .where('id = :id', { id })
+        .execute();
+      if (!updateQuestion) {
+        throw new ForbiddenException('La pregunta no existe');
+      }
+      const response = {
+        statusCode: HttpStatus.OK,
+        message: 'Pregunta actualizada con exito',
+      };
+      return response;
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ForbiddenException('La pregunta no existe');
+      }
+      if (error.code === '22P02') {
+        throw new ForbiddenException(
+          'La pregunta no tiene un formato correcto',
+        );
+      }
+      throw new ForbiddenException('Error al actualizar la pregunta');
+    }
   }
 
   //***** Delete a question *****//
