@@ -19,4 +19,22 @@ export class QuestionsService {
 
     return this.questionRepository.createQuestion(createQuestionsDto, quiz);
   }
+
+  //***** Find all questions by quiz *****//
+  async getQuestionsByQuiz(quizId: string) {
+    const question = await this.questionRepository.findQuestionsByQuiz(quizId);
+    if (!question) {
+      throw new ForbiddenException('No hay preguntas para este quiz');
+    }
+    return question;
+  }
+
+  //***** Find question by id *****//
+  async getQuestionById(questionId: string) {
+    const question = await this.questionRepository.findOne(questionId);
+    if (!question) {
+      throw new ForbiddenException('La pregunta no existe');
+    }
+    return question;
+  }
 }

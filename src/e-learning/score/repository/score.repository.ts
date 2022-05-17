@@ -8,13 +8,28 @@ export class ScoreRepository extends Repository<Score> {
   //***** Create score for a quiz and a user in a course ******//
   async createScore(
     user: User,
-    createScoreDto: CreateScoreDto,
+    courseId: string,
+    quizId: string,
+    score: number,
   ): Promise<Score> {
+    const scoreAlreadyExists = await this.findOne({
+      where: {
+        userId: user.id,
+        courseId,
+        quizId,
+      },
+    });
+    console.log('ya existe:', scoreAlreadyExists);
+    if (scoreAlreadyExists) {
+      await this.updateScore(user.id, courseId, quizId, score);
+      return scoreAlreadyExists;
+    }
+
     const newScore = new Score();
     newScore.user = user;
-    newScore.courseId = createScoreDto.courseId;
-    newScore.quizId = createScoreDto.quizId;
-    newScore.score = createScoreDto.score;
+    newScore.courseId = courseId;
+    newScore.quizId = quizId;
+    newScore.score = score;
     return await this.save(newScore);
   }
 

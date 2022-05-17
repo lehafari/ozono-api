@@ -23,12 +23,12 @@ export class QuestionsController {
     return this.questionService.createQuestion(createQuestionsDto, quizId);
   }
 
-  // //****** Find all questions by quiz *****//
-  // @UseGuards(JwtGuard)
-  // @ApiBearerAuth()
-  // @ApiOperation({ summary: 'Find all questions by quiz' })
-  // @Get('find/:quizId')
-  // async findQuestionsByQuiz(@Param('quizId') quizId: string) {
-  //   return this.questionService.getQuestionsByQuiz(quizId);
-  // }
+  //****** Find all questions by quiz *****//
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Find all questions by quiz' })
+  @Get('find/:quizId')
+  async findQuestionsByQuiz(@Param('quizId') quizId: string) {
+    return this.questionService.getQuestionsByQuiz(quizId);
+  }
 }

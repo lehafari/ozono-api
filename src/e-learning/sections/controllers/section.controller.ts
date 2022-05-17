@@ -40,10 +40,26 @@ export class SectionsController {
     return await this.sectionsService.findSectionByCourse(courseId);
   }
 
+  //***** Update section *****//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
+  @ApiOperation({ summary: 'Update section' })
+  @ApiBearerAuth()
+  @Put('update/:sectionId')
+  async updateSection(
+    @Param('sectionId') sectionId: string,
+    @Body() updateSectionDto: CreateSectionDto,
+  ) {
+    return await this.sectionsService.updateSection(
+      sectionId,
+      updateSectionDto,
+    );
+  }
+
+  //***** Delete section by id *****//
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
   @ApiOperation({ summary: 'Delete a section' })
   @ApiBearerAuth()
-  @Delete('/:sectionId')
+  @Delete('/delete/:sectionId')
   async deleteSection(@Param('sectionId') sectionId: string) {
     return await this.sectionsService.deleteSection(sectionId);
   }

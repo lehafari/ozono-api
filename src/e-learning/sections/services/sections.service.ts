@@ -11,6 +11,7 @@ export class SectionsService {
     private readonly sectionRepository: SectionRepository,
   ) {}
 
+  //***** Create a section *****//
   async createSection(section: CreateSectionDto, courseId: string) {
     const course = await this.coursesServices.getCourseById(courseId);
     if (!course) {
@@ -19,6 +20,7 @@ export class SectionsService {
     return await this.sectionRepository.createSection(section, course);
   }
 
+  //***** Find Section by course *****//
   async findSectionByCourse(courseId: string): Promise<Section[]> {
     const sections = await this.sectionRepository.findSectionByCourse(courseId);
     if (sections.length === 0 || sections === [] || sections === null) {
@@ -27,12 +29,25 @@ export class SectionsService {
     return sections;
   }
 
+  //***** Find Section by id *****//
   async findSectionById(sectionId: string): Promise<Section> {
     return await this.sectionRepository.findOne(sectionId);
   }
 
+  //***** Update a Section *****//
+  async updateSection(sectionId: string, section: CreateSectionDto) {
+    const updatedSections = await this.sectionRepository.updateSection(
+      sectionId,
+      section,
+    );
+    if (!updatedSections) {
+      throw new ForbiddenException('La seccion no existe');
+    }
+    return updatedSections;
+  }
+
+  //***** Delete a Section *****//
   async deleteSection(sectionId: string) {
-    await this.sectionRepository.delete(sectionId);
-    return { message: 'Seccion eliminada', status: 200 };
+    return await this.sectionRepository.deleteSection(sectionId);
   }
 }

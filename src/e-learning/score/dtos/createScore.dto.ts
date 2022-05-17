@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsUUID, isUUID } from 'class-validator';
+import { IsArray, IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CreateScoreDto {
   @ApiProperty()
@@ -13,7 +13,9 @@ export class CreateScoreDto {
   quizId: string;
 
   @ApiProperty()
-  @IsNumber()
+  @IsArray()
   @IsNotEmpty()
-  score: number;
+  answers: answers[];
 }
+
+type answers = { answer: string; questionId: string };

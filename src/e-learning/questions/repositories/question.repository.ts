@@ -5,6 +5,7 @@ import { Question } from '../models/question.model';
 
 @EntityRepository(Question)
 export class QuestionRepository extends Repository<Question> {
+  //***** Create a question *****//
   async createQuestion(createQuestionsDto: CreateQuestionsDto, quiz: Quiz) {
     const question = new Question();
     question.question = createQuestionsDto.question;
@@ -13,5 +14,17 @@ export class QuestionRepository extends Repository<Question> {
     question.quiz = quiz;
     await this.save(question);
     return question;
+  }
+
+  //***** Find all questions by quiz *****//
+  async findQuestionsByQuiz(quizId: string) {
+    const questions = await this.find({
+      where: {
+        quiz: {
+          id: quizId,
+        },
+      },
+    });
+    return questions;
   }
 }

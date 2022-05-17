@@ -10,6 +10,7 @@ import { ScoreModule } from './e-learning/score/score.module';
 import { QuizModule } from './e-learning/quizes/quiz.module';
 import { OptionsModule } from './e-learning/options/option.module';
 import { QuestionModule } from './e-learning/questions/question.module';
+import { LessonsModule } from './e-learning/lessons/lessons.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { QuestionModule } from './e-learning/questions/question.module';
     QuizModule,
     OptionsModule,
     QuestionModule,
+    LessonsModule,
   ],
 })
 export class AppModule {}

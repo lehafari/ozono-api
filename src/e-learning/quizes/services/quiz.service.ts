@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { SectionsService } from 'src/e-learning/sections/services/sections.service';
 import { CreateQuizDto } from '../dtos';
 import { QuizRepository } from '../repositories/quizes.repository';
@@ -13,6 +13,9 @@ export class QuizService {
   //***** Create a Quiz *****//
   async createQuiz(createQuizDto: CreateQuizDto, sectionId: string) {
     const section = await this.sectionService.findSectionById(sectionId);
+    if (!section) {
+      throw new ForbiddenException('No existe la seccion');
+    }
     return this.quizRepository.createQuiz(createQuizDto, section);
   }
 

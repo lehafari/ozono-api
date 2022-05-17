@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from 'src/users/users.module';
 import { CoursesModule } from '../courses/courses.module';
+import { OptionsModule } from '../options/option.module';
+import { QuestionModule } from '../questions/question.module';
 import { QuizModule } from '../quizes/quiz.module';
 import { ScoreController } from './controllers/score.controller';
 import { Score } from './models/score.model';
@@ -14,6 +16,8 @@ import { ScoreService } from './services/score.service';
     UsersModule,
     CoursesModule,
     QuizModule,
+    QuestionModule,
+    OptionsModule,
   ],
   controllers: [ScoreController],
   providers: [ScoreService],

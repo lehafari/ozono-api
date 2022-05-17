@@ -18,12 +18,13 @@ import { ScoreService } from '../services/score.service';
 export class ScoreController {
   constructor(private readonly scoreService: ScoreService) {}
 
-  //*****  Create score for a quiz and a user in a course ******//
+  //*****  Set score for a quiz ******//
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Create a score for a quiz and a user in a course',
   })
+  @ApiBody({ type: CreateScoreDto })
   @Put('set')
   async createScore(
     @GetUser('sub') userId: string,

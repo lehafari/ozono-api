@@ -13,5 +13,6 @@ import { OptionsService } from './services/options.service';
   ],
   controllers: [OptionsController],
   providers: [OptionsService],
+  exports: [OptionsService],
 })
 export class OptionsModule {}

@@ -221,6 +221,3 @@ export class CoursesController {
     return this.coursesService.removeUserFromCourse(addUserDto);
   }
 }
-function id(id: any) {
-  throw new Error('Function not implemented.');
-}
