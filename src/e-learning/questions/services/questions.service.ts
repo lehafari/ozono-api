@@ -37,4 +37,9 @@ export class QuestionsService {
     }
     return question;
   }
+
+  //***** Delete a question *****//
+  async deleteQuestion(questionId: string) {
+    return await this.questionRepository.deleteQuestion(questionId);
+  }
 }

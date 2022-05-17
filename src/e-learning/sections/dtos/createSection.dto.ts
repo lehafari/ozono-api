@@ -6,9 +6,4 @@ export class CreateSectionDto {
   @ApiProperty()
   @IsNotEmpty()
   name: string;
-
-  @IsString()
-  @ApiProperty()
-  @IsNotEmpty()
-  description: string;
 }

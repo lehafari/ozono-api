@@ -10,7 +10,7 @@ import {
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { Roles } from 'src/users/enum/roles.enum';
-import { CreateSectionDto } from '../dtos';
+import { CreateSectionDto, UpdateSectionDto } from '../dtos';
 import { SectionsService } from '../services/sections.service';
 
 @ApiTags('sections')
@@ -47,7 +47,7 @@ export class SectionsController {
   @Put('update/:sectionId')
   async updateSection(
     @Param('sectionId') sectionId: string,
-    @Body() updateSectionDto: CreateSectionDto,
+    @Body() updateSectionDto: UpdateSectionDto,
   ) {
     return await this.sectionsService.updateSection(
       sectionId,

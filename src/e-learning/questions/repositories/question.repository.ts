@@ -1,3 +1,4 @@
+import { ForbiddenException, HttpStatus } from '@nestjs/common';
 import { Quiz } from 'src/e-learning/quizes/models/quiz.model';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateQuestionsDto } from '../dtos/createQuestions.dto';
@@ -26,5 +27,27 @@ export class QuestionRepository extends Repository<Question> {
       },
     });
     return questions;
+  }
+
+  //***** Delete a question *****//
+  async deleteQuestion(id: string) {
+    const question = await this.findOne(id);
+    if (!question) {
+      throw new ForbiddenException('La pregunta no existe');
+    }
+    const deleteQuestion = await this.createQueryBuilder()
+      .delete()
+      .from(Question)
+      .where('id = :id', { id })
+      .execute();
+
+    if (!deleteQuestion) {
+      throw new ForbiddenException('Error al eliminar la pregunta');
+    }
+    const response = {
+      statusCode: HttpStatus.OK,
+      message: 'Pregunta eliminada con exito',
+    };
+    return response;
   }
 }

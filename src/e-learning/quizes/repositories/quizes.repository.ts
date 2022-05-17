@@ -1,4 +1,4 @@
-import { ForbiddenException } from '@nestjs/common';
+import { ForbiddenException, HttpStatus } from '@nestjs/common';
 import { Section } from 'src/e-learning/sections/models/section.model';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateQuizDto } from '../dtos';
@@ -38,5 +38,26 @@ export class QuizRepository extends Repository<Quiz> {
       },
     });
     return quizes;
+  }
+
+  //***** Delete a quiz *****//
+  async deleteQuiz(id: string) {
+    const quiz = await this.findOne(id);
+    if (!quiz) {
+      throw new ForbiddenException('El quiz no existe');
+    }
+    const deleteQuiz = await this.createQueryBuilder()
+      .delete()
+      .from(Quiz)
+      .where('id = :id', { id })
+      .execute();
+    if (!deleteQuiz) {
+      throw new ForbiddenException('Error al eliminar el quiz');
+    }
+    const response = {
+      statusCode: HttpStatus.OK,
+      message: 'Quiz eliminado con exito',
+    };
+    return response;
   }
 }

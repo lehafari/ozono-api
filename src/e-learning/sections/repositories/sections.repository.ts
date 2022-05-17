@@ -11,7 +11,7 @@ export class SectionRepository extends Repository<Section> {
   async createSection(section: CreateSectionDto, course: Course) {
     const newSection = new Section();
     newSection.name = section.name;
-    newSection.description = section.description;
+
     newSection.course = course;
     await this.save(newSection);
     return newSection;
@@ -39,7 +39,11 @@ export class SectionRepository extends Repository<Section> {
       if (!updateSection) {
         throw new ForbiddenException('La seccion no existe');
       }
-      return updateSection;
+      const response = {
+        statusCode: HttpStatus.OK,
+        message: 'Seccion actualizada con exito',
+      };
+      return response;
     } catch (error) {
       if (error.code === '23505') {
         throw new ForbiddenException('La seccion ya existe');
@@ -65,5 +69,6 @@ export class SectionRepository extends Repository<Section> {
       statusCode: HttpStatus.OK,
       message: 'Seccion eliminada con exito',
     };
+    return response;
   }
 }

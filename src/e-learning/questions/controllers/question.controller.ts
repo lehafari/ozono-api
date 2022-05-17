@@ -1,9 +1,18 @@
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 
 import { Roles } from 'src/users/enum/roles.enum';
-import { CreateQuestionsDto } from '../dtos/createQuestions.dto';
+import { CreateQuestionsDto } from '../dtos';
+
 import { QuestionsService } from '../services/questions.service';
 
 @ApiTags('questions')
@@ -23,12 +32,23 @@ export class QuestionsController {
     return this.questionService.createQuestion(createQuestionsDto, quizId);
   }
 
-  //****** Find all questions by quiz *****//
+  //****** Find questions by quiz *****//
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Find all questions by quiz' })
   @Get('find/:quizId')
   async findQuestionsByQuiz(@Param('quizId') quizId: string) {
     return this.questionService.getQuestionsByQuiz(quizId);
+  }
+
+  //****** Update question *****//
+
+  //****** Delete question by id *****//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
+  @ApiOperation({ summary: 'Delete a question' })
+  @ApiBearerAuth()
+  @Delete('delete/:questionId')
+  async deleteQuestion(@Param('questionId') questionId: string) {
+    return this.questionService.deleteQuestion(questionId);
   }
 }

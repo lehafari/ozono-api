@@ -33,4 +33,14 @@ export class OptionsService {
     }
     return options;
   }
+
+  //***** Find option by id *****//
+  async findOptionById(optionId: string) {
+    return this.optionsRepository.findOne(optionId);
+  }
+
+  //***** Delete a option *****//
+  async deleteOption(optionId: string) {
+    return await this.optionsRepository.deleteOption(optionId);
+  }
 }

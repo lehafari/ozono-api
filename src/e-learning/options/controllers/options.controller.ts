@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { Roles } from 'src/users/enum/roles.enum';
@@ -30,5 +38,16 @@ export class OptionsController {
   @Get('find/:questionId')
   async findOptionsByQuestion(@Param('questionId') questionId: string) {
     return await this.optionsService.findOptionsByQuestion(questionId);
+  }
+
+  //***** Update option *****//
+
+  //***** Delete option by id *****//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
+  @ApiOperation({ summary: 'Delete option' })
+  @ApiBearerAuth()
+  @Delete('delete/:optionId')
+  async deleteOption(@Param('optionId') optionId: string) {
+    return await this.optionsService.deleteOption(optionId);
   }
 }

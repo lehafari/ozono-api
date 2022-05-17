@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtGuard } from 'src/auth/guards';
+import { JwtGuard, RoleGuard } from 'src/auth/guards';
+import { Roles } from 'src/users/enum/roles.enum';
 import { CreateQuizDto } from '../dtos';
 import { QuizService } from '../services/quiz.service';
 
@@ -30,5 +39,16 @@ export class QuizController {
   @Get('/:sectionId')
   async findQuizBySection(@Param('sectionId') sectionId: string) {
     return await this.quizService.getQuizBySection(sectionId);
+  }
+
+  //***** Update quiz *****//
+
+  //***** Delete quiz by id *****//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
+  @ApiOperation({ summary: 'Delete a quiz' })
+  @ApiBearerAuth()
+  @Delete('/delete/:quizId')
+  async deleteQuiz(@Param('quizId') quizId: string) {
+    return await this.quizService.deleteQuiz(quizId);
   }
 }

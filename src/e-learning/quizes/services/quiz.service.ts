@@ -32,4 +32,9 @@ export class QuizService {
     }
     return quizes;
   }
+
+  //***** Delete a quiz *****//
+  async deleteQuiz(quizId: string) {
+    return await this.quizRepository.deleteQuiz(quizId);
+  }
 }

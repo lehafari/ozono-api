@@ -18,9 +18,6 @@ export class Section {
   @Column()
   name: string;
 
-  @Column()
-  description: string;
-
   @ManyToOne(() => Course, (course) => course.sections)
   course: Course;
 
