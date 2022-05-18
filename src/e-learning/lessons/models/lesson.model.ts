@@ -3,13 +3,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Generated,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { LessonVideo } from './video.model';
 
 @Entity()
-export class Lesson {
+export class CourseLesson {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -19,17 +22,10 @@ export class Lesson {
   @Column()
   description: string;
 
-  @Column()
-  order: number;
-
-  @Column({
-    nullable: true,
-  })
+  @Column({ nullable: true })
   videoUrl: string;
 
-  @Column({
-    nullable: true,
-  })
+  @Column({ nullable: true })
   thumbnailUrl: string;
 
   @Column()

@@ -1,8 +1,9 @@
 import { Course } from 'src/e-learning/courses/models/course.model';
-import { Lesson } from 'src/e-learning/lessons/models/lesson.model';
+import { CourseLesson } from 'src/e-learning/lessons/models/lesson.model';
 import { Quiz } from 'src/e-learning/quizes/models/quiz.model';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -18,12 +19,15 @@ export class Section {
   @Column()
   name: string;
 
+  @CreateDateColumn()
+  createdAt: Date;
+
   @ManyToOne(() => Course, (course) => course.sections)
   course: Course;
 
   @OneToMany(() => Quiz, (quiz) => quiz.section)
   quizes: Quiz[];
 
-  @OneToMany(() => Lesson, (lesson) => lesson.section)
-  lessons: Lesson[];
+  @OneToMany(() => CourseLesson, (lesson) => lesson.section)
+  lessons: CourseLesson[];
 }

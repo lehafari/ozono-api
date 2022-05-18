@@ -17,7 +17,10 @@ import config from 'src/config/config';
           username: database.username,
           password: database.password,
           database: database.name,
-          entities: [join(__dirname, '../**/models/**.model{.ts,.js}')],
+          entities: [
+            join(__dirname, '../**/models/**.model{.ts,.js}'),
+            join(__dirname, '../e-learning/**/models/**.model{.ts,.js}'),
+          ],
           synchronize: true,
           ssl: database.ssl.rejectUnauthorized ? database.ssl : null,
         };

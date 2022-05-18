@@ -10,7 +10,7 @@ import {
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { Roles } from 'src/users/enum/roles.enum';
-import { CreateQuizDto } from '../dtos';
+import { CreateQuizDto, UpdateQuizDto } from '../dtos';
 import { QuizService } from '../services/quiz.service';
 
 @ApiTags('quizes')
@@ -19,7 +19,7 @@ export class QuizController {
   constructor(private readonly quizService: QuizService) {}
 
   //***** Create a quiz  *****//
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a quiz' })
   @Put('/create/:sectionId')
@@ -27,8 +27,6 @@ export class QuizController {
     @Body() createQuizDto: CreateQuizDto,
     @Param('sectionId') sectionId: string,
   ) {
-    console.log('body', createQuizDto);
-    console.log('sectionId', sectionId);
     return await this.quizService.createQuiz(createQuizDto, sectionId);
   }
 
@@ -48,7 +46,7 @@ export class QuizController {
   @Put('update/:quizId')
   async updateQuiz(
     @Param('quizId') quizId: string,
-    @Body() updateQuizDto: CreateQuizDto,
+    @Body() updateQuizDto: UpdateQuizDto,
   ) {
     return await this.quizService.updateQuiz(quizId, updateQuizDto);
   }

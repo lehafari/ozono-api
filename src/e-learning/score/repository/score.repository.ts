@@ -19,7 +19,7 @@ export class ScoreRepository extends Repository<Score> {
         quizId,
       },
     });
-    console.log('ya existe:', scoreAlreadyExists);
+
     if (scoreAlreadyExists) {
       await this.updateScore(user.id, courseId, quizId, score);
       return scoreAlreadyExists;
@@ -84,8 +84,6 @@ export class ScoreRepository extends Repository<Score> {
       .relation(Score, 'user')
       .of(userId)
       .loadOne();
-
-    console.log(user);
     return user;
   }
 }

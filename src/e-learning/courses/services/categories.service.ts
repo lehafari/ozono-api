@@ -22,7 +22,6 @@ export class CategoriesService {
         createCategoryDto,
       );
       await this.categoriesRepository.save(categoryEntity);
-      console.log(categoryEntity);
       return categoryEntity;
     } catch (error) {
       if (error.code === '23505') {

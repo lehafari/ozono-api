@@ -72,7 +72,6 @@ export class ScoreService {
       }
     }
     const finalScore = Math.round((score * 100) / questions.length);
-    console.log('finalScore: ', finalScore);
     return finalScore;
   }
 

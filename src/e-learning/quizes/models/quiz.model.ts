@@ -2,6 +2,7 @@ import { Question } from 'src/e-learning/questions/models/question.model';
 import { Section } from 'src/e-learning/sections/models/section.model';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -24,6 +25,9 @@ export class Quiz {
 
   @Column()
   status: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   @ManyToOne(() => Section, (section) => section.quizes)
   section: Section;
