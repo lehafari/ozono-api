@@ -97,7 +97,7 @@ export class CoursesRepository extends Repository<Course> {
   ): Promise<Response> {
     const resp = await this.createQueryBuilder()
       .update(Course)
-      .set({ image: courseImage })
+      .set({ image: courseImage.filename })
       .where('id = :id', { id: courseId })
       .execute();
     if (!resp) {

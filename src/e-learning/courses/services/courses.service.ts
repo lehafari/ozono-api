@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { verify } from 'argon2';
+import fs from 'fs';
 import { Roles } from 'src/users/enum/roles.enum';
 import { User } from 'src/users/models/user.model';
 import { UsersRepository } from 'src/users/repositories/user.repository';
@@ -133,6 +134,19 @@ export class CoursesService {
       throw new ForbiddenException('Tienes que subir una imagen');
     }
     return this.courseRepository.uploadCourseImage(courseImage, courseId);
+  }
+
+  //***** Get course image *****//
+  async getCourseImage(image: string, res) {
+    try {
+      if (!fs.existsSync(`./files/courses/${image}`)) {
+        throw new ForbiddenException('El curso no tiene imagen');
+      }
+      const img = res.sendFile(image, { root: './files/courses' });
+      return img;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   //!   *******************************************

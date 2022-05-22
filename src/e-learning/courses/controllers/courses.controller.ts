@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -140,7 +141,16 @@ export class CoursesController {
     }),
   )
   async uploadCourseImage(@Param('id') id: string, @UploadedFile() file) {
-    return `${id}/${file.filename}`;
+    return await this.coursesService.uploadCourseImage(file, id);
+  }
+
+  //***** Get course image *****//
+
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get course image' })
+  @Get('courseImage/:imgpath')
+  async getCourseImage(@Param('imgpath') imgpath: string, @Res() res) {
+    return this.coursesService.getCourseImage(imgpath, res);
   }
 
   //!   *******************************************
