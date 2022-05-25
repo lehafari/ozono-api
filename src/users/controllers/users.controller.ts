@@ -93,6 +93,7 @@ export class UsersController {
     @GetUser() user,
   ): Promise<number> {
     try {
+      console.log('user del controlador', user);
       file.user = user.sub;
       const profileImage = file;
       return this.usersService.uploadProfileImage(profileImage);
@@ -121,7 +122,7 @@ export class UsersController {
   async deleteUser(
     @GetUser() user: JwtPayload,
     @Body() confirmPassword: confirmPasswordDto,
-  ) {
+  ): Promise<number> {
     try {
       return await this.usersService.deleteUser(
         user.sub,

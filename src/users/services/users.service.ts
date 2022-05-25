@@ -64,6 +64,16 @@ export class UsersService {
     if (!profileImage) {
       throw new BadRequestException('Tiene que subir una imagen');
     }
+    const user = await this.usersRepository.findOne(profileImage.user);
+    console.log('user: =>', user);
+    if (user.image) {
+      // delete old image from server
+      try {
+        fs.unlinkSync(`./files/${user.image}`);
+      } catch (error) {
+        console.log(error);
+      }
+    }
     const response = await this.usersRepository.uploadProfileImage(
       profileImage,
     );
@@ -98,7 +108,7 @@ export class UsersService {
   }
 
   //***** Delete User *****//
-  async deleteUser(id: string, confirmPassword: string) {
+  async deleteUser(id: string, confirmPassword: string): Promise<number> {
     const deleteUser = await this.usersRepository.deleteUser(
       id,
       confirmPassword,

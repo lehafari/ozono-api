@@ -133,6 +133,14 @@ export class CoursesService {
     if (!courseImage) {
       throw new ForbiddenException('Tienes que subir una imagen');
     }
+    const course = await this.courseRepository.findOne(courseId);
+    if (course.image) {
+      try {
+        fs.unlinkSync(`./files/courses/${course.image}`);
+      } catch (error) {
+        console.log(error);
+      }
+    }
     return this.courseRepository.uploadCourseImage(courseImage, courseId);
   }
 

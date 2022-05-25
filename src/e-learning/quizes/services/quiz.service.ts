@@ -28,7 +28,7 @@ export class QuizService {
   async getQuizBySection(sectionId: string) {
     const quizes = await this.quizRepository.findQuizBySection(sectionId);
     if (quizes.length === 0 || quizes === [] || quizes === null) {
-      throw new Error('No hay Quizes para esta seccion');
+      throw new ForbiddenException('No hay Quizes para esta seccion');
     }
     return quizes;
   }

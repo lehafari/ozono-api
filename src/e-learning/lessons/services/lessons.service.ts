@@ -31,7 +31,7 @@ export class LessonsService {
   async getLessonBySection(sectionId: string) {
     const lessons = await this.lessonRepository.findLessonBySection(sectionId);
     if (lessons.length === 0 || lessons === [] || lessons === null) {
-      throw new Error('No hay Lecciones para esta seccion');
+      throw new ForbiddenException('No hay Lecciones para esta seccion');
     }
     return lessons;
   }
