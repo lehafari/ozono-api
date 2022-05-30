@@ -133,6 +133,18 @@ export class UsersService {
     });
     return users;
   }
+  //***** Get users by rol *****//
+  async getUsersByRol(role: string): Promise<User[]> {
+    const users = await this.usersRepository.getUsersByRol(role);
+    if (!users) {
+      throw new ForbiddenException('No hay usuarios');
+    }
+    users.map((user) => {
+      delete user.password;
+      delete user.refreshToken;
+    });
+    return users;
+  }
 
   //***** Delete user *****//
   async deleteUserByAdmin(id: string) {

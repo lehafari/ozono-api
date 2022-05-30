@@ -51,11 +51,8 @@ export class QuizRepository extends Repository<Quiz> {
       if (!updateQuiz) {
         throw new ForbiddenException('El quiz no existe');
       }
-      const response = {
-        statusCode: HttpStatus.OK,
-        message: 'Quiz actualizado con exito',
-      };
-      return response;
+      const updatedQuiz = await this.findOne(id);
+      return updatedQuiz;
     } catch (error) {
       if (error.code === '23505') {
         throw new ForbiddenException('El quiz ya existe');

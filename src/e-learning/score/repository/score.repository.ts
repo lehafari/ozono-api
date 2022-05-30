@@ -24,7 +24,6 @@ export class ScoreRepository extends Repository<Score> {
       await this.updateScore(user.id, courseId, quizId, score);
       return scoreAlreadyExists;
     }
-
     const newScore = new Score();
     newScore.user = user;
     newScore.courseId = courseId;

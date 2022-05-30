@@ -146,6 +146,15 @@ export class UsersController {
     return this.usersService.getAllUsers();
   }
 
+  //***** Get users by rol *****//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get users by role' })
+  @Get('all/:role')
+  async getUsersByRol(@Param('role') role: string): Promise<User[]> {
+    return this.usersService.getUsersByRol(role);
+  }
+
   //***** Update users *****//
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN))
   @ApiBody({ type: UpdateUserDto })

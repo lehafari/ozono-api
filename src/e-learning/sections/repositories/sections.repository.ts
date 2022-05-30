@@ -39,11 +39,8 @@ export class SectionRepository extends Repository<Section> {
       if (!updateSection) {
         throw new ForbiddenException('La seccion no existe');
       }
-      const response = {
-        statusCode: HttpStatus.OK,
-        message: 'Seccion actualizada con exito',
-      };
-      return response;
+      const updatedSection = await this.findOne(id);
+      return updatedSection;
     } catch (error) {
       if (error.code === '23505') {
         throw new ForbiddenException('La seccion ya existe');

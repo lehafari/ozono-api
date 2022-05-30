@@ -41,11 +41,8 @@ export class QuestionRepository extends Repository<Question> {
       if (!updateQuestion) {
         throw new ForbiddenException('La pregunta no existe');
       }
-      const response = {
-        statusCode: HttpStatus.OK,
-        message: 'Pregunta actualizada con exito',
-      };
-      return response;
+      const updatedQuestion = await this.findOne(id);
+      return updatedQuestion;
     } catch (error) {
       if (error.code === '23505') {
         throw new ForbiddenException('La pregunta no existe');

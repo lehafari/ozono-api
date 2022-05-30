@@ -53,11 +53,8 @@ export class LessonRepository extends Repository<CourseLesson> {
       if (!updateLesson) {
         throw new ForbiddenException('La leccion no existe');
       }
-      const response = {
-        statusCode: HttpStatus.OK,
-        message: 'Leccion actualizada con exito',
-      };
-      return response;
+      const updatedLesson = await this.findOne(id);
+      return updatedLesson;
     } catch (error) {
       if (error.code === '23505') {
         throw new ForbiddenException('La leccion no existe');

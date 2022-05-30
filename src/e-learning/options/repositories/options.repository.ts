@@ -40,11 +40,8 @@ export class OptionsRepository extends Repository<Option> {
       if (!updateOption) {
         throw new ForbiddenException('La opcion no existe');
       }
-      const response = {
-        statusCode: HttpStatus.OK,
-        message: 'Opcion actualizada con exito',
-      };
-      return response;
+      const updatedOption = await this.findOne(id);
+      return updatedOption;
     } catch (error) {
       if (error.code === '23505') {
         throw new ForbiddenException('La opcion no existe');
