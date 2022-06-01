@@ -59,7 +59,7 @@ export class CoursesController {
   }
 
   //***** Get all courses *****//
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all courses' })
   @Get('all')
