@@ -136,4 +136,12 @@ export class UsersRepository extends Repository<User> {
     });
     return users;
   }
+
+  //***** Load test *****//
+  async loadTest(): Promise<User[]> {
+    const users = await this.createQueryBuilder()
+      .orderBy('username', 'DESC')
+      .getMany();
+    return users;
+  }
 }

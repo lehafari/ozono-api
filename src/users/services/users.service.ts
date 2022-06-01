@@ -167,4 +167,17 @@ export class UsersService {
     });
     return users;
   }
+
+  //***** Load test  *****//
+  async loadTest(): Promise<User[]> {
+    const users = await this.usersRepository.loadTest();
+    if (!users) {
+      throw new ForbiddenException('No hay usuarios');
+    }
+    users.map((user) => {
+      delete user.password;
+      delete user.refreshToken;
+    });
+    return users;
+  }
 }

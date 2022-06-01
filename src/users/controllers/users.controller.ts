@@ -196,4 +196,11 @@ export class UsersController {
   async findUsers(@Param('id') id: string): Promise<User[]> {
     return this.usersService.findUsers(id);
   }
+
+  //***** Load test code *****//
+  @ApiOperation({ summary: 'Load test code' })
+  @Get('loadTest')
+  async loadTest(): Promise<User[]> {
+    return this.usersService.loadTest();
+  }
 }
