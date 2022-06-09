@@ -61,6 +61,16 @@ export class LessonsService {
     if (!lesson) {
       throw new ForbiddenException('La Leccion no existe');
     }
+    const videoExist = await this.videoRepository.getVideoByLesson(lesson.id);
+    if (videoExist) {
+      try {
+        fs.unlinkSync(`./files/lessons/${videoExist.filename}`);
+        await this.videoRepository.deleteVideo(videoExist.id);
+      } catch (error) {
+        throw new ForbiddenException('No se pudo eliminar el video anterior');
+      }
+    }
+
     return this.videoRepository.createVideo(video, lesson.id);
   }
 
@@ -71,6 +81,7 @@ export class LessonsService {
       throw new ForbiddenException('La Leccion no existe');
     }
     const video = await this.videoRepository.getVideoByLesson(lesson.id);
+    console.log(video);
     if (!video) {
       throw new Error('No hay videos para esta leccion');
     }

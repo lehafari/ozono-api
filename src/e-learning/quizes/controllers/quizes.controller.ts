@@ -11,6 +11,7 @@ import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { Roles } from 'src/users/enum/roles.enum';
 import { CreateQuizDto, UpdateQuizDto } from '../dtos';
+import { Quiz } from '../models/quiz.model';
 import { QuizService } from '../services/quiz.service';
 
 @ApiTags('quizes')
@@ -37,6 +38,15 @@ export class QuizController {
   @Get('/:sectionId')
   async findQuizBySection(@Param('sectionId') sectionId: string) {
     return await this.quizService.getQuizBySection(sectionId);
+  }
+
+  //**** Find quiz by id *****//
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get quiz by id' })
+  @Get('me/:quizId')
+  async getQuizById(@Param('quizId') quizId: string): Promise<Quiz> {
+    return await this.quizService.getQuizById(quizId);
   }
 
   //***** Update quiz *****//

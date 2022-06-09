@@ -28,6 +28,18 @@ export class SectionRepository extends Repository<Section> {
     });
   }
 
+  //***** Find section by lesson *****//
+  async findSectionByLesson(lessonId: string): Promise<Section> {
+    const section = await this.createQueryBuilder('section')
+      .leftJoinAndSelect('section.lessons', 'lesson')
+      .where('lesson.id = :lessonId', { lessonId })
+      .getOne();
+    if (!section) {
+      throw new ForbiddenException('La seccion no existe');
+    }
+    return section;
+  }
+
   //***** Update a section *****//
   async updateSection(id: string, section: UpdateSectionDto) {
     try {

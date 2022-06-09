@@ -22,9 +22,9 @@ import config from 'src/config/config';
             join(__dirname, '../e-learning/**/models/**.model{.ts,.js}'),
           ],
           synchronize: true,
-          ssl: {
-            rejectUnauthorized: false,
-          },
+          // ssl: {
+          //   rejectUnauthorized: false,
+          // },
         };
       },
     }),

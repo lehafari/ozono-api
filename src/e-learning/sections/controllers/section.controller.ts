@@ -40,6 +40,16 @@ export class SectionsController {
     return await this.sectionsService.findSectionByCourse(courseId);
   }
 
+  //***** Find section by lesson ******//
+  @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Get section by lesson' })
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
+  @Get('findBylesson/:sectionId')
+  async findSectionByLesson(@Param('sectionId') sectionId: string) {
+    return await this.sectionsService.findSectionByLesson(sectionId);
+  }
+
   //***** Update section *****//
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
   @ApiOperation({ summary: 'Update section' })

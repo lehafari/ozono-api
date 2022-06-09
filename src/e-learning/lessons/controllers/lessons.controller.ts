@@ -47,6 +47,15 @@ export class LessonsController {
     return await this.lessonService.getLessonBySection(sectionId);
   }
 
+  //***** Find lesson by id *****//
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get lesson by id' })
+  @Get('me/:lessonId/')
+  async getLesson(@Param('lessonId') lessonId: string) {
+    return await this.lessonService.getLessonById(lessonId);
+  }
+
   //***** Update lesson *****//
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
   @ApiOperation({ summary: 'Update lesson' })
@@ -92,7 +101,7 @@ export class LessonsController {
   }
 
   //***** Get video by lesson *****//
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get video by lesson' })
   @Get('/video/:lessonId')

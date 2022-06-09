@@ -34,6 +34,15 @@ export class SectionsService {
     return await this.sectionRepository.findOne(sectionId);
   }
 
+  //***** Find Section by lesson *****//
+  async findSectionByLesson(sectionId: string): Promise<Section> {
+    const section = await this.sectionRepository.findSectionByLesson(sectionId);
+    if (!section) {
+      throw new ForbiddenException('La seccion no existe');
+    }
+    return section;
+  }
+
   //***** Update a Section *****//
   async updateSection(sectionId: string, section: UpdateSectionDto) {
     const updatedSections = await this.sectionRepository.updateSection(

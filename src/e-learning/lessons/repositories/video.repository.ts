@@ -38,8 +38,18 @@ export class VideoRepository extends Repository<LessonVideo> {
   async getVideoByLesson(lessonId: string) {
     const videos = await this.findOne({ lesson: lessonId });
     if (!videos) {
-      throw new Error('No hay videos para esta leccion');
+      return null;
     }
     return videos;
+  }
+
+  //***** Delete a video *****//
+  async deleteVideo(videoId: string) {
+    const video = await this.findOne(videoId);
+    if (!video) {
+      throw new ForbiddenException('El video no existe');
+    }
+    await this.delete(video);
+    return video;
   }
 }
