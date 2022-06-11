@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CoursesService } from 'src/e-learning/courses/services/courses.service';
 import { OptionsService } from 'src/e-learning/options/services/options.service';
 import { Question } from 'src/e-learning/questions/models/question.model';
@@ -41,7 +41,7 @@ export class ScoreService {
     if (!questions) {
       throw new Error('No existen preguntas para este quiz');
     }
-    const score = await this.calculateScore(createScoreDto.answers, questions);
+    const score = await this.calculateScore(createScoreDto.options, questions);
     return await this.scoreRepository.createScore(
       user,
       createScoreDto.courseId,
@@ -52,23 +52,19 @@ export class ScoreService {
 
   //***** Calculate Score *****//
   async calculateScore(
-    answers: { questionId: string; answer: string }[],
+    options: { title: string; isCorrect: boolean }[],
     questions: Question[],
   ) {
-    if (answers.length !== questions.length) {
-      throw new Error('Las preguntas y las respuestas no son iguales');
+    if (options.length !== questions.length) {
+      throw new ForbiddenException(
+        'Las preguntas y las respuestas no son iguales',
+      );
     }
     let score = 0;
     for (let i = 0; i < questions.length; i++) {
-      const question = questions.find(
-        (question) => question.id === answers[i].questionId,
-      );
-      if (!question) {
-        throw new Error('No existe la pregunta');
-      }
-
-      if (question.answer === answers[i].answer) {
-        score += 1;
+      const option = options[i];
+      if (option.isCorrect) {
+        score++;
       }
     }
     const finalScore = Math.round((score * 100) / questions.length);

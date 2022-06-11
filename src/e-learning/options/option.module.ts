@@ -7,10 +7,7 @@ import { OptionsRepository } from './repositories/options.repository';
 import { OptionsService } from './services/options.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Option, OptionsRepository]),
-    QuestionModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Option, OptionsRepository])],
   controllers: [OptionsController],
   providers: [OptionsService],
   exports: [OptionsService],

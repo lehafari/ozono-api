@@ -11,7 +11,6 @@ export class QuestionRepository extends Repository<Question> {
   async createQuestion(createQuestionsDto: CreateQuestionsDto, quiz: Quiz) {
     const question = new Question();
     question.question = createQuestionsDto.question;
-    question.answer = createQuestionsDto.answer;
     question.type = createQuestionsDto.type;
     question.quiz = quiz;
     await this.save(question);

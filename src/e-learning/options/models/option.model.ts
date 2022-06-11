@@ -7,7 +7,10 @@ export class Option {
   id: string;
 
   @Column()
-  option: string;
+  title: string;
+
+  @Column()
+  isCorrect: boolean;
 
   @ManyToOne(() => Question, (question) => question.options)
   question: Question;

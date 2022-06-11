@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsString, IsEnum, IsArray } from 'class-validator';
+import { CreateOptionDto } from 'src/e-learning/options/dtos';
 import { questionType } from '../enum';
 
 export class CreateQuestionsDto {
@@ -9,9 +10,9 @@ export class CreateQuestionsDto {
   question: string;
 
   @ApiProperty()
-  @IsString()
+  @IsArray()
   @IsNotEmpty()
-  answer: string;
+  options: CreateOptionDto[];
 
   @ApiProperty({
     enum: questionType,

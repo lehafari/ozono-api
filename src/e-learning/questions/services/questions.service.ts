@@ -1,4 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { OptionsService } from 'src/e-learning/options/services/options.service';
 import { QuizService } from 'src/e-learning/quizes/services/quiz.service';
 import { UpdateQuestionsDto } from '../dtos';
 import { CreateQuestionsDto } from '../dtos/createQuestions.dto';
@@ -9,6 +10,7 @@ export class QuestionsService {
   constructor(
     private readonly questionRepository: QuestionRepository,
     private readonly quizService: QuizService,
+    private readonly optionService: OptionsService,
   ) {}
 
   //***** Create question *****//
@@ -17,8 +19,22 @@ export class QuestionsService {
     if (!quiz) {
       throw new ForbiddenException('El quiz no existe');
     }
+    const question = await this.questionRepository.createQuestion(
+      createQuestionsDto,
+      quiz,
+    );
+    if (!question) {
+      throw new ForbiddenException('No se pudo crear la pregunta');
+    }
+    await this.optionService.createManyOptions(
+      createQuestionsDto.options,
+      question,
+    );
 
-    return this.questionRepository.createQuestion(createQuestionsDto, quiz);
+    return {
+      status: 'success',
+      message: 'Pregunta creada correctamente',
+    };
   }
 
   //***** Find all questions by quiz *****//

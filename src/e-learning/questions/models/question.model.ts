@@ -18,9 +18,6 @@ export class Question {
   question: string;
 
   @Column()
-  answer: string;
-
-  @Column()
   type: string;
 
   @OneToMany(() => Option, (option) => option.question)

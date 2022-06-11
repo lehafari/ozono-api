@@ -6,13 +6,40 @@ import { Option } from '../models/option.model';
 
 @EntityRepository(Option)
 export class OptionsRepository extends Repository<Option> {
+  //***** Create Many Options *****//
+  async createManyOptions(options: CreateOptionDto[], question: Question) {
+    const newOptions = options.map(async (option, i) => {
+      console.log(option);
+      try {
+        const newOption = this.create();
+        newOption.question = question;
+        newOption.title = option.title;
+        newOption.isCorrect = option.isCorrect;
+        console.log('new option dentro del map', newOption);
+        console.log('index', i);
+        await this.save(newOption);
+      } catch (error) {
+        if (error.code === '23505') {
+          throw new ForbiddenException('La opcion no existe');
+        }
+        if (error.code === '22P02') {
+          throw new ForbiddenException(
+            'La opcion no tiene un formato correcto',
+          );
+        }
+        throw new ForbiddenException('Error al crear la opcion');
+      }
+    });
+
+    return 'ok';
+  }
+
   //***** Create Option *****//
   async createOption(
     option: CreateOptionDto,
     question: Question,
   ): Promise<Option> {
     const newOption = this.create();
-    newOption.option = option.option;
     newOption.question = question;
     return await this.save(newOption);
   }

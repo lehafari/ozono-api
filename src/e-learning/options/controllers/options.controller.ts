@@ -20,16 +20,16 @@ export class OptionsController {
   constructor(private readonly optionsService: OptionsService) {}
 
   //***** Create option *****//
-  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create option' })
-  @Put('create/:questionId')
-  async createOption(
-    @Body() option: CreateOptionDto,
-    @Param('questionId') questionId: string,
-  ): Promise<Option> {
-    return await this.optionsService.createOption(option, questionId);
-  }
+  // @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
+  // @ApiBearerAuth()
+  // @ApiOperation({ summary: 'Create option' })
+  // @Put('create/:questionId')
+  // async createOption(
+  //   @Body() option: CreateOptionDto,
+  //   @Param('questionId') questionId: string,
+  // ): Promise<Option> {
+  //   return await this.optionsService.createOption(option, questionId);
+  // }
 
   //***** Find options by question *****//
   @UseGuards(JwtGuard)

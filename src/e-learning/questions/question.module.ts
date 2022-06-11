@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { OptionsModule } from '../options/option.module';
 import { QuizModule } from '../quizes/quiz.module';
 import { QuestionsController } from './controllers/question.controller';
 import { Question } from './models/question.model';
@@ -10,6 +11,7 @@ import { QuestionsService } from './services/questions.service';
   imports: [
     TypeOrmModule.forFeature([QuestionRepository, Question]),
     QuizModule,
+    OptionsModule,
   ],
   controllers: [QuestionsController],
   providers: [QuestionsService],

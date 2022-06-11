@@ -1,4 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Question } from 'src/e-learning/questions/models/question.model';
 import { QuestionsService } from 'src/e-learning/questions/services/questions.service';
 import { CreateOptionDto, UpdateOptionDto } from '../dtos';
 import { Option } from '../models/option.model';
@@ -6,22 +7,29 @@ import { OptionsRepository } from '../repositories/options.repository';
 
 @Injectable()
 export class OptionsService {
-  constructor(
-    private readonly optionsRepository: OptionsRepository,
-    private readonly questionService: QuestionsService,
-  ) {}
+  constructor(private readonly optionsRepository: OptionsRepository) {}
+
+  //***** Create Many Options ******//
+  async createManyOptions(options: CreateOptionDto[], question: Question) {
+    const createdOptions = await this.optionsRepository.createManyOptions(
+      options,
+      question,
+    );
+    return createdOptions;
+    console.log(options);
+  }
 
   //***** Create option *****//
-  async createOption(
-    option: CreateOptionDto,
-    questionId: string,
-  ): Promise<Option> {
-    const question = await this.questionService.getQuestionById(questionId);
-    if (!question) {
-      throw new ForbiddenException('La pregunta no existe');
-    }
-    return await this.optionsRepository.createOption(option, question);
-  }
+  // async createOption(
+  //   option: CreateOptionDto,
+  //   questionId: string,
+  // ): Promise<Option> {
+  //   const question = await this.questionService.getQuestionById(questionId);
+  //   if (!question) {
+  //     throw new ForbiddenException('La pregunta no existe');
+  //   }
+  //   return await this.optionsRepository.createOption(option, question);
+  // }
 
   //***** Find options by question *****//
   async findOptionsByQuestion(questionId: string) {

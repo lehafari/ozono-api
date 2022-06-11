@@ -15,7 +15,7 @@ export class CreateScoreDto {
   @ApiProperty()
   @IsArray()
   @IsNotEmpty()
-  answers: answers[];
+  options: options[];
 }
 
-type answers = { answer: string; questionId: string };
+type options = { title: string; isCorrect: boolean };
