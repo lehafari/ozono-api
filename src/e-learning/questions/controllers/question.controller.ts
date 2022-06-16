@@ -41,6 +41,15 @@ export class QuestionsController {
     return this.questionService.getQuestionsByQuiz(quizId);
   }
 
+  //*****  Find all questions and options *****//
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Find all questions and options' })
+  @Get('findAll/:quizId')
+  async findAllQuestionsAndOptions(@Param('quizId') quizId: string) {
+    return await this.questionService.getAllQuestionsAndOptions(quizId);
+  }
+
   //****** Update question *****//
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
   @ApiOperation({ summary: 'Update question' })

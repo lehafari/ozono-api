@@ -1,5 +1,6 @@
 import { User } from 'src/users/models/user.model';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Status } from '../enum/status.enum';
 
 @Entity()
 export class Score {
@@ -18,6 +19,9 @@ export class Score {
 
   @Column()
   quizId: string;
+
+  @Column()
+  status: Status;
 
   @ManyToOne(() => User, (user) => user.scores)
   user: User;

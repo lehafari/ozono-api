@@ -6,6 +6,7 @@ import { QuestionsService } from 'src/e-learning/questions/services/questions.se
 import { QuizService } from 'src/e-learning/quizes/services/quiz.service';
 import { UsersService } from 'src/users/services/users.service';
 import { CreateScoreDto, CreateScoreWithUserIdDto } from '../dtos';
+import { Status } from '../enum/status.enum';
 import { ScoreRepository } from '../repository/score.repository';
 
 @Injectable()
@@ -42,11 +43,14 @@ export class ScoreService {
       throw new Error('No existen preguntas para este quiz');
     }
     const score = await this.calculateScore(createScoreDto.options, questions);
+    console.log(score);
+    const status = score > 75 ? Status.APPROVED : Status.REPROVED;
     return await this.scoreRepository.createScore(
       user,
       createScoreDto.courseId,
       createScoreDto.quizId,
       score,
+      status,
     );
   }
 

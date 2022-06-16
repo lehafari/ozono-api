@@ -1,6 +1,7 @@
 import { User } from 'src/users/models/user.model';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateScoreDto } from '../dtos';
+import { Status } from '../enum/status.enum';
 import { Score } from '../models/score.model';
 
 @EntityRepository(Score)
@@ -11,6 +12,7 @@ export class ScoreRepository extends Repository<Score> {
     courseId: string,
     quizId: string,
     score: number,
+    status: Status,
   ): Promise<Score> {
     const scoreAlreadyExists = await this.findOne({
       where: {
@@ -21,14 +23,21 @@ export class ScoreRepository extends Repository<Score> {
     });
 
     if (scoreAlreadyExists) {
-      await this.updateScore(user.id, courseId, quizId, score);
-      return scoreAlreadyExists;
+      const updatedScore = await this.updateScore(
+        user.id,
+        courseId,
+        quizId,
+        score,
+        status,
+      );
+      return updatedScore;
     }
     const newScore = new Score();
     newScore.user = user;
     newScore.courseId = courseId;
     newScore.quizId = quizId;
     newScore.score = score;
+    newScore.status = status;
     return await this.save(newScore);
   }
 
@@ -53,6 +62,7 @@ export class ScoreRepository extends Repository<Score> {
     courseId: string,
     quizId: string,
     newScore: number,
+    status: Status,
   ) {
     const score = await this.findScoreByUserIdCourseIdQuizId(
       userId,
@@ -63,6 +73,7 @@ export class ScoreRepository extends Repository<Score> {
       throw new Error('No existe el score');
     }
     score.score = newScore;
+    score.status = status;
     return await this.save(score);
   }
 

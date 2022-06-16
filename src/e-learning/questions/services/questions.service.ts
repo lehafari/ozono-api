@@ -46,6 +46,25 @@ export class QuestionsService {
     return question;
   }
 
+  //***** Find all questions and options *****//
+  async getAllQuestionsAndOptions(quizId: string) {
+    const questions = await this.getQuestionsByQuiz(quizId);
+    if (!questions) {
+      throw new ForbiddenException('No hay preguntas para este quiz');
+    }
+    const options = questions.map(async (question) => {
+      const options = await this.optionService.findOptionsByQuestion(
+        question.id,
+      );
+      return {
+        ...question,
+        options,
+      };
+    });
+
+    return Promise.all(options);
+  }
+
   //***** Find question by id *****//
   async getQuestionById(questionId: string) {
     const question = await this.questionRepository.findOne(questionId);
