@@ -22,12 +22,16 @@ export class Section {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(() => Course, (course) => course.sections)
+  @ManyToOne(() => Course, (course) => course.sections, {
+    onDelete: 'CASCADE',
+  })
   course: Course;
 
-  @OneToMany(() => Quiz, (quiz) => quiz.section)
+  @OneToMany(() => Quiz, (quiz) => quiz.section, { onDelete: 'CASCADE' })
   quizes: Quiz[];
 
-  @OneToMany(() => CourseLesson, (lesson) => lesson.section)
+  @OneToMany(() => CourseLesson, (lesson) => lesson.section, {
+    onDelete: 'CASCADE',
+  })
   lessons: CourseLesson[];
 }

@@ -65,18 +65,22 @@ export class Course {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToMany((type) => User, (user) => user.courses)
-  @JoinTable()
+  @ManyToMany((type) => User, (user) => user.courses, { onDelete: 'CASCADE' })
+  @JoinTable({ name: 'user_course' })
   users: User[];
 
-  @ManyToMany((type) => User, (user) => user.courses)
-  @JoinTable()
+  @ManyToMany((type) => User, (user) => user.courses, { onDelete: 'CASCADE' })
+  @JoinTable({ name: 'teacher_course' })
   teachers: User[];
 
-  @ManyToMany((type) => Category, (category) => category.courses)
-  @JoinTable()
+  @ManyToMany((type) => Category, (category) => category.courses, {
+    onDelete: 'CASCADE',
+  })
+  @JoinTable({ name: 'category_course' })
   categories: Category[];
 
-  @OneToMany(() => Section, (section) => section.course)
+  @OneToMany(() => Section, (section) => section.course, {
+    onDelete: 'CASCADE',
+  })
   sections: Section[];
 }

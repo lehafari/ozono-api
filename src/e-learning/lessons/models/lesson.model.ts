@@ -37,6 +37,8 @@ export class CourseLesson {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Section, (section) => section.lessons)
+  @ManyToOne(() => Section, (section) => section.lessons, {
+    onDelete: 'CASCADE',
+  })
   section: Section;
 }

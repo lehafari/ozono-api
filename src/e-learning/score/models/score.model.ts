@@ -23,6 +23,8 @@ export class Score {
   @Column()
   status: Status;
 
-  @ManyToOne(() => User, (user) => user.scores)
+  @ManyToOne(() => User, (user) => user.scores, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 }

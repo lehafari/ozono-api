@@ -29,9 +29,13 @@ export class Quiz {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(() => Section, (section) => section.quizes)
+  @ManyToOne(() => Section, (section) => section.quizes, {
+    onDelete: 'CASCADE',
+  })
   section: Section;
 
-  @OneToMany(() => Question, (question) => question.quiz)
+  @OneToMany(() => Question, (question) => question.quiz, {
+    onDelete: 'CASCADE',
+  })
   questions: Question[];
 }

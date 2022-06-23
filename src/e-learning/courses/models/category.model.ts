@@ -11,6 +11,8 @@ export class Category {
   })
   title: string;
 
-  @ManyToMany((type) => Course, (course) => course.categories)
+  @ManyToMany((type) => Course, (course) => course.categories, {
+    onDelete: 'CASCADE',
+  })
   courses: Course[];
 }

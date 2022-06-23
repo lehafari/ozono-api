@@ -32,9 +32,6 @@ export class User {
   lastName: string;
 
   @Column({ unique: true })
-  username: string;
-
-  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -70,10 +67,16 @@ export class User {
   @Column({ enum: Roles, default: Roles.USER })
   role: Roles;
 
-  @ManyToMany(() => Course, (course) => course.users)
-  @JoinTable()
+  @ManyToMany(() => Course, (course) => course.users, {
+    onDelete: 'CASCADE',
+  })
+  @JoinTable({
+    name: 'user_course',
+  })
   courses: Course[];
 
-  @OneToMany(() => Score, (score) => score.user)
+  @OneToMany(() => Score, (score) => score.user, {
+    onDelete: 'CASCADE',
+  })
   scores: Score[];
 }
