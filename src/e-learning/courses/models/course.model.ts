@@ -66,7 +66,7 @@ export class Course {
   updatedAt: Date;
 
   @ManyToMany((type) => User, (user) => user.courses, { onDelete: 'CASCADE' })
-  @JoinTable({ name: 'user_course' })
+  @JoinTable()
   users: User[];
 
   @ManyToMany((type) => User, (user) => user.courses, { onDelete: 'CASCADE' })

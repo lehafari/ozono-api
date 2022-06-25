@@ -98,6 +98,7 @@ export class PaymentsService {
       const registerUserInCourse = await this.courseService.addUserToCourse(
         addUserDto,
       );
+
       return await this.paymentRepository.save(payment);
     } catch (error) {
       throw new ForbiddenException(error);

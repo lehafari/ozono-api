@@ -74,9 +74,7 @@ export class User {
   @ManyToMany(() => Course, (course) => course.users, {
     onDelete: 'CASCADE',
   })
-  @JoinTable({
-    name: 'user_course',
-  })
+  // @JoinTable()
   courses: Course[];
 
   @OneToMany(() => Score, (score) => score.user, {
