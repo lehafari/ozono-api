@@ -30,6 +30,9 @@ export class Payment {
   @Column()
   paymentReference: string;
 
+  @Column()
+  courseId: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

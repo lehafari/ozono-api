@@ -107,6 +107,17 @@ export class UsersService {
     return user;
   }
 
+  //***** Find user by payment ******//
+  async findUserByPayment(paymentId: string): Promise<User> {
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.payments', 'payment')
+      .where('payment.id = :paymentId', { paymentId })
+      .getOne();
+
+    return user;
+  }
+
   //***** Delete User *****//
   async deleteUser(id: string, confirmPassword: string): Promise<number> {
     const deleteUser = await this.usersRepository.deleteUser(

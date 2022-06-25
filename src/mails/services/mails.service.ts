@@ -1,6 +1,8 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { Course } from 'src/e-learning/courses/models/course.model';
 import { Payment } from 'src/payments/models/payment.model';
+import { User } from 'src/users/models/user.model';
 
 @Injectable()
 export class MailsService {
@@ -18,13 +20,21 @@ export class MailsService {
     });
   }
 
-  async sendApprovedPaymentMail(payment: Payment, to: string) {
+  async sendApprovedPaymentMail(payment: Payment, course: Course, user: User) {
+    const { amount, id, createdAt } = payment;
+    const { title } = course;
+    const { firstName, lastName } = user;
     await this.mailerService.sendMail({
-      to,
-      subject: 'Pago aprobado ✔',
+      to: user.email,
+      subject: 'Pago aprobado ✔ || ' + title,
       template: 'approved-payment',
       context: {
-        payment: payment,
+        amount,
+        id,
+        course: title,
+        name: firstName,
+        lastname: lastName,
+        date: createdAt,
       },
     });
   }

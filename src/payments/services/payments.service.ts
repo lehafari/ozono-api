@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CoursesService } from 'src/e-learning/courses/services/courses.service';
 import { MailsService } from 'src/mails/services/mails.service';
 import { UsersService } from 'src/users/services/users.service';
 import { Repository } from 'typeorm';
@@ -14,6 +15,7 @@ export class PaymentsService {
     private readonly paymentRepository: Repository<Payment>,
     private readonly userService: UsersService,
     private readonly mailService: MailsService,
+    private readonly courseService: CoursesService,
   ) {}
 
   //***** Find all payments *****//
@@ -64,11 +66,14 @@ export class PaymentsService {
   async approve(id: string): Promise<Payment> {
     try {
       const payment = await this.paymentRepository.findOne(id);
+      const user = await this.userService.findUserByPayment(id);
+      const course = await this.courseService.getCourseById(payment.courseId);
+      console.log(course);
       if (payment.paymentStatus === PaymentStatus.APPROVED) {
         throw new ForbiddenException('Payment already approved');
       }
       payment.paymentStatus = PaymentStatus.APPROVED;
-
+      await this.mailService.sendApprovedPaymentMail(payment, course, user);
       return await this.paymentRepository.save(payment);
     } catch (error) {
       throw new ForbiddenException(error);
