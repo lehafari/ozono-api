@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MailsService } from 'src/mails/services/mails.service';
 import { UsersService } from 'src/users/services/users.service';
 import { Repository } from 'typeorm';
 import { CreatePaymentDto } from '../dtos';
@@ -12,6 +13,7 @@ export class PaymentsService {
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
     private readonly userService: UsersService,
+    private readonly mailService: MailsService,
   ) {}
 
   //***** Find all payments *****//
@@ -66,6 +68,7 @@ export class PaymentsService {
         throw new ForbiddenException('Payment already approved');
       }
       payment.paymentStatus = PaymentStatus.APPROVED;
+
       return await this.paymentRepository.save(payment);
     } catch (error) {
       throw new ForbiddenException(error);

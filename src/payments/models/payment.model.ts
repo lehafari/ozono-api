@@ -33,6 +33,6 @@ export class Payment {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(() => User, (user) => user.payments)
+  @ManyToOne(() => User, (user) => user.payments, { onDelete: 'SET NULL' })
   user: User;
 }

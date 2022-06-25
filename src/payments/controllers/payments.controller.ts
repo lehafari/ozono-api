@@ -57,6 +57,7 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Approved payment' })
   @Put('approved/:id')
   async approved(@Param('id') id: string): Promise<Payment> {
+    console.log(id);
     return await this.paymentsService.approve(id);
   }
 

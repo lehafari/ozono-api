@@ -20,7 +20,7 @@ import { MailsController } from './controllers/mails.controller';
           },
         },
         template: {
-          dir: __dirname + '/templates',
+          dir: 'src/mails/templates',
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
@@ -31,5 +31,6 @@ import { MailsController } from './controllers/mails.controller';
   ],
   controllers: [MailsController],
   providers: [MailsService],
+  exports: [MailsService],
 })
 export class MailsModule {}
