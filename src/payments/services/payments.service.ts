@@ -55,7 +55,9 @@ export class PaymentsService {
     try {
       const user = await this.userService.findById(userId);
       const payment = this.paymentRepository.create(createPaymentDto);
+      const course = await this.courseService.getCourseById(payment.courseId);
       payment.user = user;
+      await this.mailService.sendNoticePaymentMail(payment, course, user);
       return await this.paymentRepository.save(payment);
     } catch (error) {
       throw new ForbiddenException(error);
