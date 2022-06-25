@@ -79,6 +79,27 @@ export class CoursesService {
     return students.length;
   }
 
+  //*****  Get courses by actual user *****//
+  async getCoursesByActualUser(userId: string): Promise<Course[]> {
+    try {
+      const user = await this.userRepository.findOne(userId);
+      if (!user) {
+        throw new ForbiddenException('El usuario no existe');
+      }
+      const courses = await this.courseRepository
+        .createQueryBuilder('course')
+        .leftJoinAndSelect('course.users', 'user')
+        .where('user.id = :userId', { userId })
+        .getMany();
+      const filterCourses = courses.map((course) => {
+        delete course.users;
+        return course;
+      });
+
+      return filterCourses;
+    } catch (error) {}
+  }
+
   //***** Update course *****//
   //! Only Admin and Teacher
   async updateCourse(

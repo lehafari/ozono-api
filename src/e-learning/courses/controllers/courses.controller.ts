@@ -83,6 +83,15 @@ export class CoursesController {
     return this.coursesService.getCourseByStatus(status);
   }
 
+  //***** Get courses by actual user *****//
+  @ApiOperation({ summary: 'Get courses by actual user' })
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
+  @Get('me')
+  async getCourseByActualUser(@GetUser('sub') id: string): Promise<Course[]> {
+    return this.coursesService.getCoursesByActualUser(id);
+  }
+
   //***** Update course *****//
   //! Only admin and teacher
   @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
