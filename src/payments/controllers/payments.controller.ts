@@ -3,6 +3,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { GetUser } from 'src/users/decorators';
 import { Roles } from 'src/users/enum/roles.enum';
+import { User } from 'src/users/models/user.model';
 import { CreatePaymentDto } from '../dtos';
 import { Payment } from '../models/payment.model';
 import { PaymentsService } from '../services/payments.service';
@@ -17,7 +18,7 @@ export class PaymentsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Find all payments' })
   @Get('findAll')
-  async findAll(): Promise<Payment[]> {
+  async findAll() {
     return await this.paymentsService.findAll();
   }
 

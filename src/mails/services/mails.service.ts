@@ -40,21 +40,26 @@ export class MailsService {
   }
 
   async sendNoticePaymentMail(payment: Payment, course: Course, user: User) {
-    const { amount, id, createdAt } = payment;
-    const { title } = course;
-    const { firstName, lastName } = user;
-    await this.mailerService.sendMail({
-      to: process.env.ADMIN_EMAIL,
-      subject: 'Solicitud de pago',
-      template: 'notice-payment',
-      context: {
-        amount,
-        id,
-        course: title,
-        name: firstName,
-        lastname: lastName,
-        date: createdAt,
-      },
-    });
+    try {
+      const { amount, id, createdAt } = payment;
+      const { title } = course;
+      const { firstName, lastName } = user;
+      await this.mailerService.sendMail({
+        to: process.env.ADMIN_EMAIL,
+        subject: 'Solicitud de pago',
+        template: 'notice-payment',
+        context: {
+          amount,
+          id,
+          course: title,
+          name: firstName,
+          lastname: lastName,
+          date: createdAt,
+        },
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }
