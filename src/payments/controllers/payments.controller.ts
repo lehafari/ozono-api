@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RoleGuard } from 'src/auth/guards';
 import { GetUser } from 'src/users/decorators';
@@ -43,7 +43,7 @@ export class PaymentsController {
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create payment' })
-  @Get('create')
+  @Put('create')
   async create(
     @GetUser('sub') userId: string,
     createPaymentDto: CreatePaymentDto,
