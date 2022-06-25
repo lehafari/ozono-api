@@ -18,6 +18,7 @@ import {
 import { Roles } from '../enum/roles.enum';
 import { Course } from 'src/e-learning/courses/models/course.model';
 import { Score } from 'src/e-learning/score/models/score.model';
+import { Payment } from 'src/payments/models/payment.model';
 
 @Entity()
 @Unique(['email', 'username', 'ci'])
@@ -82,4 +83,9 @@ export class User {
     onDelete: 'CASCADE',
   })
   scores: Score[];
+
+  @OneToMany(() => Payment, (payment) => payment.user, {
+    onDelete: 'NO ACTION',
+  })
+  payments: Payment[];
 }

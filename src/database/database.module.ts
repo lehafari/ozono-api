@@ -1,9 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { join } from 'path';
 import config from 'src/config/config';
 
+@Global()
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -31,5 +33,6 @@ import config from 'src/config/config';
   ],
   controllers: [],
   providers: [],
+  exports: [],
 })
 export class DatabaseModule {}

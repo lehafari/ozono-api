@@ -11,6 +11,8 @@ import { QuizModule } from './e-learning/quizes/quiz.module';
 import { OptionsModule } from './e-learning/options/option.module';
 import { QuestionModule } from './e-learning/questions/question.module';
 import { LessonsModule } from './e-learning/lessons/lessons.module';
+import { PaymentsModule } from './payments/payments.module';
+import { MailsModule } from './mails/mails.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { LessonsModule } from './e-learning/lessons/lessons.module';
     OptionsModule,
     QuestionModule,
     LessonsModule,
+    PaymentsModule,
+    MailsModule,
   ],
 })
 export class AppModule {}

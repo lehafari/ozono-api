@@ -1,0 +1,5 @@
+export enum paymentMethod {
+  TRANSFERENCIA = 'TRANSFERENCIA',
+  EFECTIVO = 'EFECTIVO',
+  PAGO_MOVIL = 'PAGO_MOVIL',
+}

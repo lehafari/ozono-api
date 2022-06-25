@@ -15,4 +15,10 @@ export default registerAs('config', () => ({
     secret: process.env.JWT_SECRET,
     refreshSecret: process.env.JWT_REFRESH_SECRET,
   },
+  mail: {
+    host: process.env.MAIL_HOST,
+    port: parseInt(process.env.MAIL_PORT),
+    username: process.env.MAIL_USERNAME,
+    password: process.env.MAIL_PASSWORD,
+  },
 }));
