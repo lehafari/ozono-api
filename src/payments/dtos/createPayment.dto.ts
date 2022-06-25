@@ -7,7 +7,7 @@ export class CreatePaymentDto {
   @IsNumber()
   amount: number;
 
-  @ApiProperty()
+  @ApiProperty({ enum: paymentMethod })
   @IsEnum(paymentMethod)
   paymentMethod: paymentMethod;
 
