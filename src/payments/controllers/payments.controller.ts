@@ -50,4 +50,22 @@ export class PaymentsController {
   ): Promise<Payment> {
     return await this.paymentsService.create(userId, createPaymentDto);
   }
+
+  //***** Approved payment *****//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Approved payment' })
+  @Put('approved/:id')
+  async approved(@Param('id') id: string): Promise<Payment> {
+    return await this.paymentsService.approve(id);
+  }
+
+  //***** Rejected payment *****//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Rejected payment' })
+  @Put('rejected/:id')
+  async rejected(@Param('id') id: string): Promise<Payment> {
+    return await this.paymentsService.reject(id);
+  }
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/services/users.service';
 import { Repository } from 'typeorm';
 import { CreatePaymentDto } from '../dtos';
+import { PaymentStatus } from '../enums';
 import { Payment } from '../models/payment.model';
 
 @Injectable()
@@ -61,10 +62,10 @@ export class PaymentsService {
   async approve(id: string): Promise<Payment> {
     try {
       const payment = await this.paymentRepository.findOne(id);
-      if (payment.paymentStatus === true) {
+      if (payment.paymentStatus === PaymentStatus.APPROVED) {
         throw new ForbiddenException('Payment already approved');
       }
-      payment.paymentStatus = true;
+      payment.paymentStatus = PaymentStatus.APPROVED;
       return await this.paymentRepository.save(payment);
     } catch (error) {
       throw new ForbiddenException(error);
@@ -75,10 +76,10 @@ export class PaymentsService {
   async reject(id: string): Promise<Payment> {
     try {
       const payment = await this.paymentRepository.findOne(id);
-      if (payment.paymentStatus === false) {
+      if (payment.paymentStatus === PaymentStatus.REJECTED) {
         throw new ForbiddenException('Payment already rejected');
       }
-      payment.paymentStatus = false;
+      payment.paymentStatus = PaymentStatus.REJECTED;
       return await this.paymentRepository.save(payment);
     } catch (error) {
       throw new ForbiddenException(error);

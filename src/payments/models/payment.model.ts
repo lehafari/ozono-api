@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { paymentMethod } from '../enums';
+import { paymentMethod, PaymentStatus } from '../enums';
 
 @Entity()
 export class Payment {
@@ -22,9 +22,10 @@ export class Payment {
   paymentMethod: paymentMethod;
 
   @Column({
-    default: false,
+    enum: PaymentStatus,
+    default: PaymentStatus.PENDING,
   })
-  paymentStatus: boolean;
+  paymentStatus: PaymentStatus;
 
   @Column()
   paymentReference: string;
