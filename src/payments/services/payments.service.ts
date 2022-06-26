@@ -88,18 +88,16 @@ export class PaymentsService {
       delete user.password;
       delete user.refreshToken;
       const course = await this.courseService.getCourseById(payment.courseId);
-      console.log(course);
+      console.log(payment);
       if (payment.paymentStatus === PaymentStatus.APPROVED) {
         throw new ForbiddenException('Payment already approved');
       }
       payment.paymentStatus = PaymentStatus.APPROVED;
+      const paymentAprobed = await this.paymentRepository.save(payment);
       await this.mailService.sendApprovedPaymentMail(payment, course, user);
       const addUserDto: AddUserDto = { userId: user.id, courseId: course.id };
-      const registerUserInCourse = await this.courseService.addUserToCourse(
-        addUserDto,
-      );
-
-      return await this.paymentRepository.save(payment);
+      await this.courseService.addUserToCourse(addUserDto);
+      return paymentAprobed;
     } catch (error) {
       throw new ForbiddenException(error);
     }
