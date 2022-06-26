@@ -5,6 +5,7 @@ import { CoursesModule } from '../courses/courses.module';
 import { OptionsModule } from '../options/option.module';
 import { QuestionModule } from '../questions/question.module';
 import { QuizModule } from '../quizes/quiz.module';
+import { SectionsModule } from '../sections/sections.module';
 import { ScoreController } from './controllers/score.controller';
 import { Score } from './models/score.model';
 import { ScoreRepository } from './repository/score.repository';
@@ -18,6 +19,7 @@ import { ScoreService } from './services/score.service';
     QuizModule,
     QuestionModule,
     OptionsModule,
+    SectionsModule,
   ],
   controllers: [ScoreController],
   providers: [ScoreService],

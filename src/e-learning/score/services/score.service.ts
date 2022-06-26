@@ -4,6 +4,7 @@ import { OptionsService } from 'src/e-learning/options/services/options.service'
 import { Question } from 'src/e-learning/questions/models/question.model';
 import { QuestionsService } from 'src/e-learning/questions/services/questions.service';
 import { QuizService } from 'src/e-learning/quizes/services/quiz.service';
+import { SectionsService } from 'src/e-learning/sections/services/sections.service';
 import { UsersService } from 'src/users/services/users.service';
 import { CreateScoreDto, CreateScoreWithUserIdDto } from '../dtos';
 import { Status } from '../enum/status.enum';
@@ -18,6 +19,7 @@ export class ScoreService {
     private readonly quizService: QuizService,
     private readonly questionService: QuestionsService,
     private readonly optionsService: OptionsService,
+    private readonly sectionService: SectionsService,
   ) {}
 
   //***** SET USER SCORE  ******//
@@ -73,6 +75,19 @@ export class ScoreService {
     }
     const finalScore = Math.round((score * 100) / questions.length);
     return finalScore;
+  }
+
+  //***** Get users score *****//
+  async findScoresByUser(userId: string) {
+    const scores = await this.scoreRepository.find({
+      where: { userId },
+    });
+    const responseObject = scores.map(async (score) => {
+      const quiz = await this.quizService.getQuizById(score.quizId);
+      const course = await this.courseService.getCourseById(score.courseId);
+      return { ...score, quiz, course };
+    });
+    return await Promise.all(responseObject);
   }
 
   //***** ADMIN SET USER SCORE  ******//

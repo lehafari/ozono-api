@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   ForbiddenException,
+  Get,
   Param,
   Put,
   UseGuards,
@@ -50,6 +51,21 @@ export class ScoreController {
   ) {
     try {
       return this.scoreService.createScoreWithUser(createScoreWithUserIdDto);
+    } catch (error) {
+      throw new ForbiddenException(error.message);
+    }
+  }
+
+  //*****  Get score for a quiz and a user in a course ******//
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Get a score for a quiz and a user in a course',
+  })
+  @Get('me')
+  async getScore(@GetUser('sub') userId: string) {
+    try {
+      return this.scoreService.findScoresByUser(userId);
     } catch (error) {
       throw new ForbiddenException(error.message);
     }
