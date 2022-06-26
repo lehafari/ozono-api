@@ -70,4 +70,16 @@ export class PaymentsController {
   async rejected(@Param('id') id: string): Promise<Payment> {
     return await this.paymentsService.reject(id);
   }
+
+  //***** Check payment ******//
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Check payment' })
+  @Get('check/:courseId')
+  async check(
+    @GetUser('sub') userId: string,
+    @Param('courseId') courseId: string,
+  ): Promise<Boolean> {
+    return await this.paymentsService.checkPaymentStatus(courseId, userId);
+  }
 }

@@ -110,6 +110,7 @@ export class PaymentsService {
       if (payment.paymentStatus === PaymentStatus.REJECTED) {
         throw new ForbiddenException('Payment already rejected');
       }
+
       payment.paymentStatus = PaymentStatus.REJECTED;
       return await this.paymentRepository.save(payment);
     } catch (error) {
@@ -120,15 +121,15 @@ export class PaymentsService {
   //***** Check course payment status *****//
   async checkPaymentStatus(courseId: string, userId: string): Promise<Boolean> {
     try {
-      const payment = await this.paymentRepository.find({
-        where: { courseId, userId, paymentStatus: true },
-      });
-      if (
-        payment.length === 0 ||
-        payment === undefined ||
-        payment === null ||
-        !payment
-      ) {
+      const paymentStatus = PaymentStatus.APPROVED;
+      const payment = await this.paymentRepository
+        .createQueryBuilder('payment')
+        .leftJoinAndSelect('payment.user', 'user')
+        .where('payment.courseId = :courseId', { courseId })
+        .andWhere('payment.userId = :userId', { userId })
+        .andWhere('payment.paymentStatus = :paymentStatus', { paymentStatus })
+        .getOne();
+      if (payment === undefined) {
         return false;
       }
       return true;

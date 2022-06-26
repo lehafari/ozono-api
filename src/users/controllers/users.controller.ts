@@ -138,7 +138,7 @@ export class UsersController {
   //! Disponible solo para el rol ADMIN !//
 
   //***** Get all users *****//
-  // @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN))
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all users' })
   @Get('all')

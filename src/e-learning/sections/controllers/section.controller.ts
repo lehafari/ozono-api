@@ -32,7 +32,7 @@ export class SectionsController {
   }
 
   //***** Find section by course *****//
-  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN, Roles.TEACHER))
+  @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Get sections by course' })
   @ApiBearerAuth()
   @Get('/:courseId')
