@@ -7,7 +7,9 @@ import { User } from 'src/users/models/user.model';
 import { UsersService } from 'src/users/services/users.service';
 import { Repository } from 'typeorm';
 import { CreatePaymentDto } from '../dtos';
+import { CreateAccount } from '../dtos/createAccount.dto';
 import { PaymentStatus } from '../enums';
+import { Account } from '../models/accounts.model';
 import { Payment } from '../models/payment.model';
 
 @Injectable()
@@ -15,6 +17,8 @@ export class PaymentsService {
   constructor(
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
+    @InjectRepository(Account)
+    private readonly accountRepository: Repository<Account>,
     private readonly userService: UsersService,
     private readonly mailService: MailsService,
     private readonly courseService: CoursesService,
@@ -154,6 +158,36 @@ export class PaymentsService {
       const payment = await this.paymentRepository.findOne(id);
       await this.paymentRepository.delete(id);
       return payment;
+    } catch (error) {
+      throw new ForbiddenException(error);
+    }
+  }
+
+  //***** Set payment account *****//
+  async setPaymentAccount(createAccount: CreateAccount) {
+    try {
+      const accounts = await this.accountRepository
+        .createQueryBuilder('account')
+        .getMany();
+      if (accounts.length === 0) {
+        const account = this.accountRepository.create(createAccount);
+        await this.accountRepository.save(account);
+        return account;
+      }
+      accounts.map(async (account) => {
+        await this.accountRepository.update(account.id, createAccount);
+        return await this.accountRepository.findOne(account.id);
+      });
+    } catch (error) {}
+  }
+
+  //***** Get payment account *****//
+  async getPaymentAccount() {
+    try {
+      const accounts = await this.accountRepository
+        .createQueryBuilder('account')
+        .getOne();
+      return accounts;
     } catch (error) {
       throw new ForbiddenException(error);
     }

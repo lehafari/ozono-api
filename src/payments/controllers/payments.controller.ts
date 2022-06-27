@@ -5,6 +5,7 @@ import { GetUser } from 'src/users/decorators';
 import { Roles } from 'src/users/enum/roles.enum';
 import { User } from 'src/users/models/user.model';
 import { CreatePaymentDto } from '../dtos';
+import { CreateAccount } from '../dtos/createAccount.dto';
 import { Payment } from '../models/payment.model';
 import { PaymentsService } from '../services/payments.service';
 
@@ -58,7 +59,6 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Approved payment' })
   @Put('approved/:id')
   async approved(@Param('id') id: string): Promise<Payment> {
-    console.log(id);
     return await this.paymentsService.approve(id);
   }
 
@@ -81,5 +81,23 @@ export class PaymentsController {
     @Param('courseId') courseId: string,
   ): Promise<Boolean> {
     return await this.paymentsService.checkPaymentStatus(courseId, userId);
+  }
+
+  //***** Set payment account ******//
+  @UseGuards(JwtGuard, RoleGuard(Roles.ADMIN))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Set payment account' })
+  @Put('setAccount')
+  async setAccount(@Body() createAccount: CreateAccount) {
+    return await this.paymentsService.setPaymentAccount(createAccount);
+  }
+
+  //***** Get payment account ******//
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get payment account' })
+  @Get('getAccount')
+  async getAccount() {
+    return await this.paymentsService.getPaymentAccount();
   }
 }

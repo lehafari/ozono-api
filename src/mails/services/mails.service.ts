@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Course } from 'src/e-learning/courses/models/course.model';
 import { Payment } from 'src/payments/models/payment.model';
 import { User } from 'src/users/models/user.model';
+import { ContactDto } from '../dtos/contac.dto';
 
 @Injectable()
 export class MailsService {
@@ -61,5 +62,18 @@ export class MailsService {
     } catch (error) {
       return false;
     }
+  }
+
+  async sendContactMail(contactDto: ContactDto) {
+    await this.mailerService.sendMail({
+      to: process.env.ADMIN_EMAIL,
+      subject: `${contactDto.supportType}`,
+      template: 'contact',
+      context: {
+        name: contactDto.name,
+        email: contactDto.email,
+        message: contactDto.message,
+      },
+    });
   }
 }
