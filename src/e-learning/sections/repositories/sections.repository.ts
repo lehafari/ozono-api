@@ -11,7 +11,9 @@ export class SectionRepository extends Repository<Section> {
   async createSection(section: CreateSectionDto, course: Course) {
     const newSection = new Section();
     newSection.name = section.name;
-
+    const sections = await this.findSectionByCourse(course.id);
+    const lastIndex = sections.length;
+    newSection.index = lastIndex + 1;
     newSection.course = course;
     await this.save(newSection);
     return newSection;

@@ -19,6 +19,9 @@ export class Section {
   @Column()
   name: string;
 
+  @Column()
+  index: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
