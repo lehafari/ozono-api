@@ -39,7 +39,6 @@ export class LessonsController {
   }
 
   //***** Find lesson by section *****//
-  @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get lessons by section ' })
   @Get('/:sectionId')
@@ -48,7 +47,6 @@ export class LessonsController {
   }
 
   //***** Find lesson by id *****//
-  @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get lesson by id' })
   @Get('me/:lessonId/')

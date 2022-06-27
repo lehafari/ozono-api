@@ -32,7 +32,7 @@ export class QuizController {
   }
 
   //***** Find quiz by section *****//
-  @UseGuards(JwtGuard)
+
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get quizes by section ' })
   @Get('/:sectionId')
@@ -41,7 +41,7 @@ export class QuizController {
   }
 
   //**** Find quiz by id *****//
-  @UseGuards(JwtGuard)
+
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get quiz by id' })
   @Get('me/:quizId')

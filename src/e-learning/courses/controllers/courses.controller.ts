@@ -68,7 +68,7 @@ export class CoursesController {
   }
 
   //***** Get course by id *****//
-  @UseGuards(JwtGuard)
+
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get course by id' })
   @Get('id/:id')

@@ -33,7 +33,7 @@ export class SectionsController {
   }
 
   //***** Find section by course *****//
-  @UseGuards(JwtGuard)
+
   @ApiOperation({ summary: 'Get sections by course' })
   @ApiBearerAuth()
   @Get('/:courseId')
@@ -42,7 +42,7 @@ export class SectionsController {
   }
 
   //***** Find section by lesson ******//
-  @UseGuards(JwtGuard)
+
   @ApiOperation({ summary: 'Get section by lesson' })
   @ApiBearerAuth()
   @UseGuards(JwtGuard)
@@ -52,16 +52,10 @@ export class SectionsController {
   }
 
   //***** Find section by index *****//
-  @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Get section by index' })
   @ApiBearerAuth()
   @Post('index')
   async findSectionById(@Body() indexDto: { index: number; courseId: string }) {
-    console.log(
-      '🚀 ~ file: section.controller.ts ~ line 59 ~ SectionsController ~ findSectionById ~ indexDto',
-      indexDto,
-    );
-
     return await this.sectionsService.findSectionByIndex(
       indexDto.index,
       indexDto.courseId,
