@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -48,6 +49,23 @@ export class SectionsController {
   @Get('findBylesson/:sectionId')
   async findSectionByLesson(@Param('sectionId') sectionId: string) {
     return await this.sectionsService.findSectionByLesson(sectionId);
+  }
+
+  //***** Find section by index *****//
+  @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Get section by index' })
+  @ApiBearerAuth()
+  @Post('index')
+  async findSectionById(@Body() indexDto: { index: number; courseId: string }) {
+    console.log(
+      '🚀 ~ file: section.controller.ts ~ line 59 ~ SectionsController ~ findSectionById ~ indexDto',
+      indexDto,
+    );
+
+    return await this.sectionsService.findSectionByIndex(
+      indexDto.index,
+      indexDto.courseId,
+    );
   }
 
   //***** Update section *****//

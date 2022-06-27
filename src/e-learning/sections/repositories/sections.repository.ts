@@ -30,6 +30,19 @@ export class SectionRepository extends Repository<Section> {
     });
   }
 
+  //***** Find section by index *****//
+  async findSectionByIndex(index: number, courseId: string): Promise<Section> {
+    const section = await this.createQueryBuilder('section')
+      .leftJoinAndSelect('section.course', 'course')
+      .where('section.index = :index', { index })
+      .andWhere('course.id = :courseId', { courseId })
+      .getOne();
+    if (!section) {
+      throw new ForbiddenException('La seccion no existe');
+    }
+    return section;
+  }
+
   //***** Find section by lesson *****//
   async findSectionByLesson(lessonId: string): Promise<Section> {
     const section = await this.createQueryBuilder('section')

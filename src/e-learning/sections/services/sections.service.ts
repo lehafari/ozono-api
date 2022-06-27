@@ -29,6 +29,16 @@ export class SectionsService {
     return sections;
   }
 
+  //***** Find Section by index *****//
+  async findSectionByIndex(index: number, courseId: string): Promise<Section> {
+    const section = await this.sectionRepository.findSectionByIndex(
+      index,
+      courseId,
+    );
+
+    return section;
+  }
+
   //***** Find Section by id *****//
   async findSectionById(sectionId: string): Promise<Section> {
     return await this.sectionRepository.findOne(sectionId);
