@@ -18,6 +18,9 @@ const config: ConnectionOptions = {
   ssl: {
     rejectUnauthorized: false,
   },
+  extra: {
+    ssl: true,
+  },
 };
 
 export = config;
