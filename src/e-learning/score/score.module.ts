@@ -23,6 +23,6 @@ import { ScoreService } from './services/score.service';
   ],
   controllers: [ScoreController],
   providers: [ScoreService],
-  exports: [],
+  exports: [ScoreService],
 })
 export class ScoreModule {}

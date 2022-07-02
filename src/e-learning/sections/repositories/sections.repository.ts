@@ -46,11 +46,18 @@ export class SectionRepository extends Repository<Section> {
   //***** Find section by lesson *****//
   async findSectionByLesson(lessonId: string): Promise<Section> {
     const section = await this.createQueryBuilder('section')
-      .leftJoinAndSelect('section.lessons', 'lesson')
-      .where('lesson.id = :lessonId', { lessonId })
+      .leftJoinAndSelect('section.lessons', 'lessons')
+      .where('lessons.id = :lessonId', { lessonId })
       .getOne();
+
     if (!section) {
-      throw new ForbiddenException('La seccion no existe');
+      const section = await this.createQueryBuilder('section')
+        .leftJoinAndSelect('section.quizes', 'quizes')
+        .where('quizes.id = :lessonId', { lessonId })
+        .getOne();
+
+      console.log(section);
+      return section;
     }
     return section;
   }

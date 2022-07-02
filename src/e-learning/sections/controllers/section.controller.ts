@@ -46,9 +46,9 @@ export class SectionsController {
   @ApiOperation({ summary: 'Get section by lesson' })
   @ApiBearerAuth()
   @UseGuards(JwtGuard)
-  @Get('findBylesson/:sectionId')
-  async findSectionByLesson(@Param('sectionId') sectionId: string) {
-    return await this.sectionsService.findSectionByLesson(sectionId);
+  @Get('findBylesson/:lessonId')
+  async findSectionByLesson(@Param('lessonId') lessonId: string) {
+    return await this.sectionsService.findSectionByLesson(lessonId);
   }
 
   //***** Find section by index *****//

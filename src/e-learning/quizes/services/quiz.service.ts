@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { SectionsService } from 'src/e-learning/sections/services/sections.service';
 import { CreateQuizDto, UpdateQuizDto } from '../dtos';
+import { Quiz } from '../models/quiz.model';
 import { QuizRepository } from '../repositories/quizes.repository';
 
 @Injectable()
@@ -22,6 +23,24 @@ export class QuizService {
   //***** Find quiz by id ******//
   async getQuizById(quizId: string) {
     return this.quizRepository.findOne(quizId);
+  }
+
+  //***** Find quizzes by course *****//
+  async getQuizByCourse(courseId: string): Promise<string[]> {
+    const sections = await this.sectionService.findSectionByCourse(courseId);
+    const quizzes = await Promise.all(
+      sections.map(async (section) => {
+        return await this.quizRepository.findQuizBySection(section.id);
+      }),
+    );
+    const quizzesIds = quizzes.map((section) => {
+      const quizId = section.map((quiz) => {
+        return quiz.id;
+      });
+      return quizId;
+    });
+    const quizzesIdsConcat = quizzesIds.reduce((a, b) => a.concat(b), []);
+    return quizzesIdsConcat;
   }
 
   //***** Find quiz by section *****//

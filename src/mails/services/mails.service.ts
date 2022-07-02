@@ -4,6 +4,11 @@ import { Course } from 'src/e-learning/courses/models/course.model';
 import { Payment } from 'src/payments/models/payment.model';
 import { User } from 'src/users/models/user.model';
 import { ContactDto } from '../dtos/contac.dto';
+const pdf = require('html-pdf');
+
+import * as fs from 'fs';
+import path from 'path';
+import { getContent } from '../certificates/model';
 
 @Injectable()
 export class MailsService {
@@ -45,6 +50,7 @@ export class MailsService {
       const { amount, id, createdAt } = payment;
       const { title } = course;
       const { firstName, lastName } = user;
+
       await this.mailerService.sendMail({
         to: process.env.ADMIN_EMAIL,
         subject: 'Solicitud de pago',
@@ -75,5 +81,55 @@ export class MailsService {
         message: contactDto.message,
       },
     });
+  }
+  async sendCertificateMail(user: User, course: Course, certificateId: string) {
+    try {
+      const { firstName, lastName } = user;
+      const { title } = course;
+
+      await pdf
+        .create(getContent(firstName, lastName, title, certificateId))
+        .toFile(
+          path.join(__dirname, `../../../certificates/${certificateId}.pdf`),
+          function (err, res) {
+            if (err) {
+              null;
+            } else {
+              null;
+            }
+          },
+        );
+
+      setTimeout(async () => {
+        try {
+          await this.mailerService.sendMail({
+            to: user.email,
+            subject: 'Certificado del curso ✔ || ' + title,
+            template: 'certificate',
+            attachments: [
+              {
+                filename: `${certificateId}.pdf`,
+                path: path.join(
+                  __dirname,
+                  `../../../certificates/${certificateId}.pdf`,
+                ),
+                contentType: 'application/pdf',
+              },
+            ],
+
+            context: {
+              name: firstName,
+              lastname: lastName,
+              course: title,
+            },
+          });
+        } catch (error) {
+          return false;
+        }
+      }),
+        2000;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
